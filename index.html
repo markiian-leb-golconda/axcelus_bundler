@@ -537,26 +537,26 @@ function generateBundle(p) {
   // ── Investor Questionnaires ──
   if (p.ownerType === "individual") {
     if (p.ppmType === "3c7") {
-      add("IND_AIQP","Axcelus AI-QP Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(7) + Individual");
+      add("IND_AIQP","Axcelus AI-QP Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(7) — Accredited Investor + Qualified Purchaser, Individual Owner");
     } else {
-      add("IND_AI","Axcelus AI Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(1) + Individual");
+      add("IND_AI","Axcelus AI Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(1) — Accredited Investor Only, Individual Owner");
     }
     add("IND_RP","Axcelus Restricted Person Questionnaire — Individual Policy Owner","—","investor","All Individuals");
     add("IND_5131","Axcelus Rule 5131 Questionnaire — Individual Policy Owner","—","investor","All Individuals");
   } else if (p.ownerType === "entity") {
     if (p.ppmType === "3c7") {
-      add("ENT_AIQP","Axcelus AI-QP Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(7) + Entity");
+      add("ENT_AIQP","Axcelus AI-QP Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(7) — Accredited Investor + Qualified Purchaser, Entity Owner");
     } else {
-      add("ENT_AI","Axcelus AI Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(1) + Entity");
+      add("ENT_AI","Axcelus AI Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(1) — Accredited Investor Only, Entity Owner");
     }
     add("ENT_RP","Axcelus Restricted Person Questionnaire — Entity Policy Owner","—","investor","All Entities");
     add("ENT_5131","Axcelus Rule 5131 Questionnaire — Entity Policy Owner","—","investor","All Entities");
 
     if (p.hasSupportingEntity) {
       if (p.ppmType === "3c7") {
-        add("SUP_ENT_AIQP","Axcelus AI-QP Supporting Questionnaire (Entity)","—","investor","Supporting Entity + 3(c)(7)");
+        add("SUP_ENT_AIQP","Axcelus AI-QP Supporting Questionnaire (Entity)","—","investor","Supporting Entity, PPM 3(c)(7) — Accredited Investor + Qualified Purchaser");
       } else {
-        add("SUP_ENT_AI","Axcelus AI Supporting Questionnaire (Entity)","—","investor","Supporting Entity + 3(c)(1)");
+        add("SUP_ENT_AI","Axcelus AI Supporting Questionnaire (Entity)","—","investor","Supporting Entity, PPM 3(c)(1) — Accredited Investor Only");
       }
       add("SUP_ENT_RP","Axcelus Restricted Person Supporting Questionnaire (Entity)","—","investor","Supporting Entity");
       add("SUP_ENT_5131","Axcelus Rule 5131 Supporting Questionnaire (Entity)","—","investor","Supporting Entity");
@@ -564,9 +564,9 @@ function generateBundle(p) {
 
     if (p.hasSupportingIndividual) {
       if (p.ppmType === "3c7") {
-        add("SUP_IND_AIQP","Axcelus AI-QP Supporting Questionnaire (Individual)","—","investor","Supporting Individual + 3(c)(7)");
+        add("SUP_IND_AIQP","Axcelus AI-QP Supporting Questionnaire (Individual)","—","investor","Supporting Individual, PPM 3(c)(7) — Accredited Investor + Qualified Purchaser");
       } else {
-        add("SUP_IND_AI","Axcelus AI Supporting Questionnaire (Individual)","—","investor","Supporting Individual + 3(c)(1)");
+        add("SUP_IND_AI","Axcelus AI Supporting Questionnaire (Individual)","—","investor","Supporting Individual, PPM 3(c)(1) — Accredited Investor Only");
       }
       add("SUP_IND_RP","Axcelus Restricted Person Supporting Questionnaire (Individual)","—","investor","Supporting Individual");
       add("SUP_IND_5131","Axcelus Rule 5131 Supporting Questionnaire (Individual)","—","investor","Supporting Individual");
@@ -712,11 +712,11 @@ function BundlerPage() {
           <div className="radio-group">
             <div className="radio-option">
               <input type="radio" name="ppm" id="ppm7" value="3c7" checked={ppmType==="3c7"} onChange={e=>setPpmType(e.target.value)} />
-              <label htmlFor="ppm7">3(c)(7) — AI + QP</label>
+              <label htmlFor="ppm7">3(c)(7) — Accredited Investor + Qualified Purchaser</label>
             </div>
             <div className="radio-option">
               <input type="radio" name="ppm" id="ppm1" value="3c1" checked={ppmType==="3c1"} onChange={e=>setPpmType(e.target.value)} />
-              <label htmlFor="ppm1">3(c)(1) — AI Only</label>
+              <label htmlFor="ppm1">3(c)(1) — Accredited Investor Only</label>
             </div>
           </div>
         </div>
@@ -871,8 +871,8 @@ function LogicPage() {
       <h2>2. Decision Tree — Investor Questionnaires</h2>
       <p>The PPM type determines which investor status questionnaire to use. The owner type and entity structure determine how many sets of questionnaires are needed.</p>
       <pre>{`IF owner_type = "individual":
-  IF ppm_type = "3c7" → IND_AIQP    (AI + QP questionnaire)
-  IF ppm_type = "3c1" → IND_AI      (AI-only questionnaire)
+  IF ppm_type = "3c7" → IND_AIQP    (Accredited Investor + Qualified Purchaser questionnaire)
+  IF ppm_type = "3c1" → IND_AI      (Accredited Investor only questionnaire)
   ALWAYS              → IND_RP      (Restricted Person)
   ALWAYS              → IND_5131    (Rule 5131)
 
