@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Axcelus Forms Bundler</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --navy: #0B1D33;
+    --navy-light: #132B4A;
+    --navy-lighter: #1A3A5C;
+    --slate: #64748b;
+    --slate-light: #94a3b8;
+    --ice: #E8F0FE;
+    --ice-dark: #D1DFEF;
+    --white: #FAFBFD;
+    --accent: #2563EB;
+    --accent-hover: #1D4ED8;
+    --accent-light: #DBEAFE;
+    --green: #059669;
+    --green-light: #D1FAE5;
+    --amber: #D97706;
+    --amber-light: #FEF3C7;
+    --red: #DC2626;
+    --red-light: #FEE2E2;
+    --border: #E2E8F0;
+    --shadow: 0 1px 3px rgba(11,29,51,0.08), 0 1px 2px rgba(11,29,51,0.06);
+    --shadow-lg: 0 10px 25px rgba(11,29,51,0.1), 0 4px 10px rgba(11,29,51,0.06);
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: var(--white);
+    color: var(--navy);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
+
+  /* ── NAV ── */
+  .nav {
+    background: var(--navy);
+    color: white;
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .nav-brand svg { opacity: 0.7; }
+  .nav-links { display: flex; gap: 0.25rem; }
+  .nav-link {
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.15s;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+  .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+  .nav-link.active { color: white; background: rgba(255,255,255,0.15); }
+  .nav-logout {
+    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    background: none;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .nav-logout:hover { color: white; border-color: rgba(255,255,255,0.3); }
+
+  /* ── LOGIN ── */
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-lighter) 100%);
+  }
+  .login-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: var(--shadow-lg);
+  }
+  .login-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
+  }
+  .login-sub {
+    color: var(--slate);
+    font-size: 0.875rem;
+    margin-bottom: 1.75rem;
+  }
+
+  /* ── FORM ELEMENTS ── */
+  .field { margin-bottom: 1.25rem; }
+  .field-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+  .field-hint {
+    font-size: 0.78rem;
+    color: var(--slate-light);
+    margin-top: 0.2rem;
+  }
+
+  select, input[type="password"], input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--navy);
+    background: white;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  select:focus, input:focus { border-color: var(--accent); }
+  select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' stroke='%2364748b' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: white; width: 100%; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--slate);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .radio-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .radio-option {
+    flex: 1;
+    min-width: 120px;
+  }
+  .radio-option input { display: none; }
+  .radio-option label {
+    display: block;
+    padding: 0.55rem 0.85rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--slate);
+  }
+  .radio-option input:checked + label {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .radio-option label:hover { border-color: var(--slate-light); }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-label { font-size: 0.875rem; font-weight: 500; }
+  .toggle {
+    width: 40px;
+    height: 22px;
+    background: var(--border);
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    border: none;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { transform: translateX(18px); }
+
+  .error-msg {
+    background: var(--red-light);
+    color: var(--red);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  .warning-msg {
+    background: var(--amber-light);
+    color: var(--amber);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+
+  /* ── BUNDLER LAYOUT ── */
+  .bundler-page { display: flex; min-height: calc(100vh - 56px); }
+  .bundler-sidebar {
+    width: 380px;
+    min-width: 380px;
+    padding: 1.5rem;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    background: white;
+  }
+  .bundler-main {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    overflow-y: auto;
+    background: var(--white);
+  }
+  @media (max-width: 900px) {
+    .bundler-page { flex-direction: column; }
+    .bundler-sidebar { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid var(--border); }
+  }
+
+  .sidebar-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── RESULTS TABLE ── */
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .results-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .results-count {
+    font-size: 0.85rem;
+    color: var(--slate);
+    background: var(--ice);
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .form-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .form-table th {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--slate);
+    background: var(--ice);
+    border-bottom: 2px solid var(--ice-dark);
+    position: sticky;
+    top: 0;
+  }
+  .form-table td {
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .form-table tr:hover td { background: rgba(37,99,235,0.03); }
+
+  .cat-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .cat-investor { background: #EDE9FE; color: #6D28D9; }
+  .cat-universal { background: var(--accent-light); color: var(--accent); }
+  .cat-state { background: var(--green-light); color: var(--green); }
+  .cat-conditional { background: var(--amber-light); color: var(--amber); }
+
+  .cat-divider td {
+    padding: 0.6rem 0.75rem;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--slate);
+    background: var(--ice);
+    border-bottom: 1px solid var(--ice-dark);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--slate);
+  }
+  .empty-state svg { margin-bottom: 1rem; opacity: 0.3; }
+  .empty-state p { font-size: 0.95rem; }
+
+  /* ── LOGIC PAGE ── */
+  .logic-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  .logic-page h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .logic-page h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--ice);
+    letter-spacing: -0.01em;
+  }
+  .logic-page h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .logic-page p, .logic-page li {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #334155;
+  }
+  .logic-page ul, .logic-page ol { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+  .logic-page li { margin-bottom: 0.35rem; }
+  .logic-page code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82em;
+    background: var(--ice);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  .logic-page pre {
+    background: var(--navy);
+    color: #E2E8F0;
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    margin: 0.75rem 0 1rem;
+  }
+  .logic-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 0.75rem 0 1rem;
+  }
+  .logic-table th {
+    text-align: left;
+    padding: 0.5rem 0.6rem;
+    background: var(--ice);
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--slate);
+    border-bottom: 2px solid var(--ice-dark);
+  }
+  .logic-table td {
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .nav, .bundler-sidebar, .nav-logout { display: none !important; }
+    .bundler-main { padding: 0; }
+    .form-table th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* ── CONDITIONAL FIELD ANIMATION ── */
+  .cond-field {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+  .cond-field.hidden { max-height: 0; opacity: 0; pointer-events: none; margin: 0; }
+  .cond-field.visible { max-height: 200px; opacity: 1; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo, useCallback } = React;
+
+// ════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════
+
+const STATES = [
+  {code:"AL",name:"Alabama"},{code:"AK",name:"Alaska"},{code:"AZ",name:"Arizona"},
+  {code:"AR",name:"Arkansas"},{code:"CA",name:"California"},{code:"CO",name:"Colorado"},
+  {code:"CT",name:"Connecticut"},{code:"DE",name:"Delaware"},{code:"DC",name:"District of Columbia"},
+  {code:"FL",name:"Florida"},{code:"GA",name:"Georgia"},{code:"HI",name:"Hawaii"},
+  {code:"ID",name:"Idaho"},{code:"IL",name:"Illinois"},{code:"IN",name:"Indiana"},
+  {code:"IA",name:"Iowa"},{code:"KS",name:"Kansas"},{code:"KY",name:"Kentucky"},
+  {code:"LA",name:"Louisiana"},{code:"ME",name:"Maine"},{code:"MD",name:"Maryland"},
+  {code:"MA",name:"Massachusetts"},{code:"MI",name:"Michigan"},{code:"MN",name:"Minnesota"},
+  {code:"MS",name:"Mississippi"},{code:"MO",name:"Missouri"},{code:"MT",name:"Montana"},
+  {code:"NE",name:"Nebraska"},{code:"NV",name:"Nevada"},{code:"NH",name:"New Hampshire"},
+  {code:"NJ",name:"New Jersey"},{code:"NM",name:"New Mexico"},{code:"NY",name:"New York"},
+  {code:"NC",name:"North Carolina"},{code:"ND",name:"North Dakota"},{code:"OH",name:"Ohio"},
+  {code:"OK",name:"Oklahoma"},{code:"OR",name:"Oregon"},{code:"PA",name:"Pennsylvania"},
+  {code:"RI",name:"Rhode Island"},{code:"SC",name:"South Carolina"},{code:"SD",name:"South Dakota"},
+  {code:"TN",name:"Tennessee"},{code:"TX",name:"Texas"},{code:"UT",name:"Utah"},
+  {code:"VT",name:"Vermont"},{code:"VA",name:"Virginia"},{code:"WA",name:"Washington"},
+  {code:"WV",name:"West Virginia"},{code:"WI",name:"Wisconsin"},{code:"WY",name:"Wyoming"}
+];
+
+const BLOCKED = ["NH","NY","PR"];
+
+const APP_FORMS = {
+  AL:"APVA-197",AK:"APVA-197",AZ:"APVA-197AZ",AR:"APVA-197F",CA:"APVA-197CA",
+  CO:"APVA-197",CT:"APVA-197",DE:"APVA-197",DC:"APVA-197DC",FL:"APVA-197FL",
+  GA:"APVA-197",HI:"APVA-2012",ID:"APVA-197",IL:"APVA-197",IN:"APVA-197",
+  IA:"APVA-197",KS:"APVA-197",KY:"APVA-197",LA:"APVA-197",ME:"APVA-197F",
+  MD:"APVA-197MD",MA:"APVA-197MA",MI:"APVA-197",MN:"APVA-197",MS:"APVA-197",
+  MO:"APVA-197",MT:"APVA-197",NE:"APVA-197",NV:"APVA-197",NJ:"APVA-197NJ",
+  NM:"APVA-197",NC:"APVA-197NC",ND:"APVA-197",OH:"APVA-197F",OK:"APVA-197OK",
+  OR:"APVA-197",PA:"APVA-197",RI:"APVA-197",SC:"APVA-197",SD:"APVA-197",
+  TN:"APVA-197",TX:"APVA-197TX",UT:"APVA-197",VT:"APVA-197",VA:"APVA-197",
+  WA:"APVA-197",WV:"APVA-197",WI:"APVA-197",WY:"APVA-197"
+};
+
+const REPL_FORMS = {
+  AL:["GNLRepl-0111"],AK:["GNLRepl-0111"],AZ:["GNLRepl-0111"],
+  AR:["ArkCompForm-0111"],CA:["CARepl-0111"],CO:["GNLRepl-0111"],
+  CT:["GNLRepl-0111"],DE:["DERepl-0111"],DC:["GNLRepl-0111"],
+  FL:["FLReplA-0111","FLDFS-H1-1981"],GA:["GARepl-1116"],HI:["GNLRepl-0111"],
+  ID:["IDRepl-0111"],IL:["ILReplA-1112","ILReplB-1112"],IN:["INRepl-0111"],
+  IA:["GNLRepl-0111"],KS:null,KY:["GNLRepl-0111"],LA:["GNLRepl-0111"],
+  ME:["GNLRepl-0111"],MD:["GNLRepl-0111"],MA:["MARepl-0111"],MI:["MIRepl-0111"],
+  MN:["MNRepl-0111"],MS:["GNLRepl-0111"],MO:["MORepl-0111"],MT:["GNLRepl-0111"],
+  NE:["GNLRepl-0111"],NV:null,NJ:["GNLRepl-0111"],NM:["GNLRepl-0111"],
+  NC:["GNLRepl-0111"],ND:null,OH:["GNLRepl-0111"],OK:["OKRepl-0111"],
+  OR:["GNLRepl-0111"],PA:["PARepl-0111"],RI:["GNLRepl-0111"],SC:["GNLRepl-0111"],
+  SD:["SDRepl1035Ex-1116"],TN:["TNRepl-1116"],TX:["GNLRepl-0111"],UT:["GNLRepl-0111"],
+  VT:["GNLRepl-0111"],VA:["GNLRepl-0111"],WA:["WARepl-1116"],WV:["GNLRepl-0111"],
+  WI:["GNLRepl-0111"],WY:["WYRepl-0313"]
+};
+
+const PASSWORD = "axcelus2025";
+
+// ════════════════════════════════════════
+//  BUNDLING ENGINE
+// ════════════════════════════════════════
+
+function generateBundle(p) {
+  if (!p.state || BLOCKED.includes(p.state)) return [];
+  const forms = [];
+  let seq = 0;
+  const add = (tag, name, formId, cat, condition) => {
+    seq++;
+    forms.push({seq, tag, name, formId: formId || "—", category: cat, condition});
+  };
+
+  // ── Investor Questionnaires ──
+  if (p.ownerType === "individual") {
+    if (p.ppmType === "3c7") {
+      add("IND_AIQP","Axcelus AI-QP Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(7) + Individual");
+    } else {
+      add("IND_AI","Axcelus AI Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(1) + Individual");
+    }
+    add("IND_RP","Axcelus Restricted Person Questionnaire — Individual Policy Owner","—","investor","All Individuals");
+    add("IND_5131","Axcelus Rule 5131 Questionnaire — Individual Policy Owner","—","investor","All Individuals");
+  } else if (p.ownerType === "entity") {
+    if (p.ppmType === "3c7") {
+      add("ENT_AIQP","Axcelus AI-QP Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(7) + Entity");
+    } else {
+      add("ENT_AI","Axcelus AI Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(1) + Entity");
+    }
+    add("ENT_RP","Axcelus Restricted Person Questionnaire — Entity Policy Owner","—","investor","All Entities");
+    add("ENT_5131","Axcelus Rule 5131 Questionnaire — Entity Policy Owner","—","investor","All Entities");
+
+    if (p.hasSupportingEntity) {
+      if (p.ppmType === "3c7") {
+        add("SUP_ENT_AIQP","Axcelus AI-QP Supporting Questionnaire (Entity)","—","investor","Supporting Entity + 3(c)(7)");
+      } else {
+        add("SUP_ENT_AI","Axcelus AI Supporting Questionnaire (Entity)","—","investor","Supporting Entity + 3(c)(1)");
+      }
+      add("SUP_ENT_RP","Axcelus Restricted Person Supporting Questionnaire (Entity)","—","investor","Supporting Entity");
+      add("SUP_ENT_5131","Axcelus Rule 5131 Supporting Questionnaire (Entity)","—","investor","Supporting Entity");
+    }
+
+    if (p.hasSupportingIndividual) {
+      if (p.ppmType === "3c7") {
+        add("SUP_IND_AIQP","Axcelus AI-QP Supporting Questionnaire (Individual)","—","investor","Supporting Individual + 3(c)(7)");
+      } else {
+        add("SUP_IND_AI","Axcelus AI Supporting Questionnaire (Individual)","—","investor","Supporting Individual + 3(c)(1)");
+      }
+      add("SUP_IND_RP","Axcelus Restricted Person Supporting Questionnaire (Individual)","—","investor","Supporting Individual");
+      add("SUP_IND_5131","Axcelus Rule 5131 Supporting Questionnaire (Individual)","—","investor","Supporting Individual");
+    }
+  }
+
+  // ── Operational Forms ──
+  add("PPM_RECEIPT","Private Placement Memorandum Receipt","PPM Receipt","universal","Always");
+  add("APPLICATION","Application for Variable Annuity Contract",APP_FORMS[p.state] || "—","state","State: " + p.state);
+  add("W9","W-9","W-9","universal","Always");
+  add("ACK","Acknowledgement Form","Acknowledgement Form","universal","Always");
+  add("DOC_DELIVERY","Document Delivery Instructions","Electronic Delivery Instructions","universal","Always");
+  add("INTERESTED_PARTY","Interested Party Request","Interested Party Request","universal","Always");
+  add("NOTICE_INS","Notice of Insurance Information Practices","Notice of Insurance Info","universal","Always");
+
+  // CA Free Look
+  if (p.state === "CA" && p.isApplicant60Plus) {
+    add("CA_FREE_LOOK","CA Senior Policy Free Look","CA Free Look Invest Auth","conditional","CA + Applicant 60+");
+  }
+
+  // Replacement forms
+  if (p.transactionType === "replacement") {
+    add("1035_EXCHANGE","1035 Absolute Exchange Form","1035 Absolute Exchange Form","conditional","Replacement");
+    add("1035_LOST","1035 Lost Policy Letter","1035 Lost Policy Letter","conditional","Replacement");
+
+    const replForms = REPL_FORMS[p.state];
+    if (p.state === "KS") {
+      const ksForm = p.ksInsurerType === "same" ? "KSReplSame-0111" : "KSReplDiff-0111";
+      add("REPLACEMENT","Replacement Form",ksForm,"state","KS Replacement (" + p.ksInsurerType + " insurer)");
+    } else if (replForms) {
+      replForms.forEach((f, i) => {
+        add("REPLACEMENT" + (i > 0 ? "_" + (i+1) : ""),"Replacement Form",f,"state","Replacement — " + p.state);
+      });
+    }
+    // NV/ND: no replacement form — we just don't add one
+    if ((p.state === "NV" || p.state === "ND") && !replForms) {
+      add("REPLACEMENT_NOTE","⚠ No replacement form available for " + p.state,"—","conditional","State has no replacement form");
+    }
+  }
+
+  add("PRIVACY","Privacy Policy","Axcelus Privacy Policy","universal","Always");
+  add("PRIVACY_CA","Privacy Policy — CA Residents","Axcelus Privacy Policy CA Residents","universal","Always (all states)");
+  add("WIRE","Wire Instructions","Wire Instructions","universal","Always");
+
+  return forms;
+}
+
+// ════════════════════════════════════════
+//  COMPONENTS
+// ════════════════════════════════════════
+
+function Toggle({on, onChange, label}) {
+  return (
+    <div className="toggle-row">
+      <span className="toggle-label">{label}</span>
+      <button type="button" className={`toggle ${on ? 'on' : ''}`} onClick={() => onChange(!on)} aria-label={label}></button>
+    </div>
+  );
+}
+
+function CategoryBadge({cat}) {
+  const cls = {investor:"cat-investor",universal:"cat-universal",state:"cat-state",conditional:"cat-conditional"};
+  const labels = {investor:"Investor Qual",universal:"Universal",state:"State-Specific",conditional:"Conditional"};
+  return <span className={`cat-badge ${cls[cat]||''}`}>{labels[cat]||cat}</span>;
+}
+
+// ════════════════════════════════════════
+//  LOGIN PAGE
+// ════════════════════════════════════════
+
+function LoginPage({onLogin}) {
+  const [pw, setPw] = useState("");
+  const [err, setErr] = useState(false);
+
+  const submit = (e) => {
+    e.preventDefault();
+    if (pw === PASSWORD) { onLogin(); }
+    else { setErr(true); setPw(""); }
+  };
+
+  return (
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-title">Axcelus Forms Bundler</div>
+        <div className="login-sub">Enter password to access the bundler tool.</div>
+        {err && <div className="error-msg">Incorrect password. Try again.</div>}
+        <form onSubmit={submit}>
+          <div className="field">
+            <label className="field-label">Password</label>
+            <input type="password" value={pw} onChange={e => {setPw(e.target.value); setErr(false);}} placeholder="Enter password" autoFocus />
+          </div>
+          <button type="submit" className="btn btn-primary">Sign In</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  BUNDLER PAGE
+// ════════════════════════════════════════
+
+function BundlerPage() {
+  const [state, setState] = useState("");
+  const [ppmType, setPpmType] = useState("3c7");
+  const [ownerType, setOwnerType] = useState("individual");
+  const [hasSupportingEntity, setHasSupportingEntity] = useState(false);
+  const [hasSupportingIndividual, setHasSupportingIndividual] = useState(false);
+  const [transactionType, setTransactionType] = useState("new_business");
+  const [isApplicant60Plus, setIsApplicant60Plus] = useState(false);
+  const [ksInsurerType, setKsInsurerType] = useState("different");
+
+  const isBlocked = BLOCKED.includes(state);
+
+  const forms = useMemo(() => {
+    if (!state || isBlocked) return [];
+    return generateBundle({
+      state, ppmType, ownerType, hasSupportingEntity, hasSupportingIndividual,
+      transactionType, isApplicant60Plus, ksInsurerType
+    });
+  }, [state, ppmType, ownerType, hasSupportingEntity, hasSupportingIndividual, transactionType, isApplicant60Plus, ksInsurerType, isBlocked]);
+
+  return (
+    <div className="bundler-page">
+      <div className="bundler-sidebar">
+        <div className="sidebar-title">Parameters</div>
+
+        <div className="field">
+          <label className="field-label">State</label>
+          <select value={state} onChange={e => setState(e.target.value)}>
+            <option value="">Select state…</option>
+            {STATES.map(s => (
+              <option key={s.code} value={s.code} disabled={BLOCKED.includes(s.code)}>
+                {s.name} ({s.code}){BLOCKED.includes(s.code) ? ' — Not Approved' : ''}
+              </option>
+            ))}
+          </select>
+          {isBlocked && <div className="warning-msg">⚠ {state} is not approved for PPVA business.</div>}
+        </div>
+
+        <div className="field">
+          <label className="field-label">PPM Type</label>
+          <div className="radio-group">
+            <div className="radio-option">
+              <input type="radio" name="ppm" id="ppm7" value="3c7" checked={ppmType==="3c7"} onChange={e=>setPpmType(e.target.value)} />
+              <label htmlFor="ppm7">3(c)(7) — AI + QP</label>
+            </div>
+            <div className="radio-option">
+              <input type="radio" name="ppm" id="ppm1" value="3c1" checked={ppmType==="3c1"} onChange={e=>setPpmType(e.target.value)} />
+              <label htmlFor="ppm1">3(c)(1) — AI Only</label>
+            </div>
+          </div>
+        </div>
+
+        <div className="field">
+          <label className="field-label">Owner Type</label>
+          <div className="radio-group">
+            <div className="radio-option">
+              <input type="radio" name="owner" id="ind" value="individual" checked={ownerType==="individual"} onChange={e=>{setOwnerType(e.target.value);setHasSupportingEntity(false);setHasSupportingIndividual(false);}} />
+              <label htmlFor="ind">Individual</label>
+            </div>
+            <div className="radio-option">
+              <input type="radio" name="owner" id="ent" value="entity" checked={ownerType==="entity"} onChange={e=>setOwnerType(e.target.value)} />
+              <label htmlFor="ent">Entity</label>
+            </div>
+          </div>
+        </div>
+
+        <div className={`cond-field ${ownerType==="entity" ? "visible" : "hidden"}`}>
+          <div className="field" style={{background:'var(--ice)',padding:'0.75rem',borderRadius:'var(--radius)'}}>
+            <label className="field-label" style={{marginBottom:'0.5rem'}}>Entity Structure</label>
+            <Toggle on={hasSupportingEntity} onChange={setHasSupportingEntity} label="Has Supporting Entity?" />
+            <Toggle on={hasSupportingIndividual} onChange={setHasSupportingIndividual} label="Has Supporting Individual?" />
+          </div>
+        </div>
+
+        <div className="field">
+          <label className="field-label">Transaction Type</label>
+          <div className="radio-group">
+            <div className="radio-option">
+              <input type="radio" name="tx" id="nb" value="new_business" checked={transactionType==="new_business"} onChange={e=>setTransactionType(e.target.value)} />
+              <label htmlFor="nb">New Business</label>
+            </div>
+            <div className="radio-option">
+              <input type="radio" name="tx" id="repl" value="replacement" checked={transactionType==="replacement"} onChange={e=>setTransactionType(e.target.value)} />
+              <label htmlFor="repl">Replacement</label>
+            </div>
+          </div>
+        </div>
+
+        <div className={`cond-field ${state==="CA" ? "visible" : "hidden"}`}>
+          <div className="field" style={{background:'var(--ice)',padding:'0.75rem',borderRadius:'var(--radius)'}}>
+            <Toggle on={isApplicant60Plus} onChange={setIsApplicant60Plus} label="Applicant Age 60+?" />
+            <div className="field-hint">California requires Senior Policy Free Look for applicants 60+.</div>
+          </div>
+        </div>
+
+        <div className={`cond-field ${state==="KS" && transactionType==="replacement" ? "visible" : "hidden"}`}>
+          <div className="field" style={{background:'var(--amber-light)',padding:'0.75rem',borderRadius:'var(--radius)'}}>
+            <label className="field-label">KS: Replacing Insurer</label>
+            <div className="radio-group">
+              <div className="radio-option">
+                <input type="radio" name="ks" id="ksd" value="different" checked={ksInsurerType==="different"} onChange={e=>setKsInsurerType(e.target.value)} />
+                <label htmlFor="ksd">Different</label>
+              </div>
+              <div className="radio-option">
+                <input type="radio" name="ks" id="kss" value="same" checked={ksInsurerType==="same"} onChange={e=>setKsInsurerType(e.target.value)} />
+                <label htmlFor="kss">Same</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bundler-main">
+        {!state ? (
+          <div className="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <p>Select a state to generate the form bundle.</p>
+          </div>
+        ) : isBlocked ? (
+          <div className="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--red)" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6m0-6l6 6"/></svg>
+            <p style={{color:'var(--red)',fontWeight:600}}>{state} is not approved for PPVA/PPVL business.</p>
+          </div>
+        ) : (
+          <>
+            <div className="results-header">
+              <div className="results-title">Form Bundle — {STATES.find(s=>s.code===state)?.name || state}</div>
+              <div style={{display:'flex',gap:'0.5rem',alignItems:'center'}}>
+                <span className="results-count">{forms.length} forms</span>
+                <button className="btn btn-outline" style={{fontSize:'0.8rem',padding:'0.3rem 0.7rem'}} onClick={()=>window.print()}>
+                  Print
+                </button>
+              </div>
+            </div>
+            <table className="form-table">
+              <thead>
+                <tr>
+                  <th style={{width:36}}>#</th>
+                  <th style={{width:130}}>Tag</th>
+                  <th>Form Name</th>
+                  <th style={{width:180}}>Form ID</th>
+                  <th style={{width:110}}>Category</th>
+                  <th style={{width:180}}>Condition</th>
+                </tr>
+              </thead>
+              <tbody>
+                {forms.map((f, i) => {
+                  // Insert category dividers
+                  const prevCat = i > 0 ? forms[i-1].category : null;
+                  const divider = f.category !== prevCat;
+                  const catLabels = {investor:"Investor Qualification Questionnaires",universal:"Operational Forms — Universal",state:"Operational Forms — State-Specific",conditional:"Operational Forms — Conditional"};
+                  return (
+                    <React.Fragment key={i}>
+                      {divider && <tr className="cat-divider"><td colSpan={6}>{catLabels[f.category] || f.category}</td></tr>}
+                      <tr>
+                        <td style={{color:'var(--slate)',fontSize:'0.78rem'}}>{f.seq}</td>
+                        <td><code className="mono">{f.tag}</code></td>
+                        <td>{f.name}</td>
+                        <td><code className="mono" style={{color:'var(--navy)'}}>{f.formId}</code></td>
+                        <td><CategoryBadge cat={f.category} /></td>
+                        <td style={{color:'var(--slate)',fontSize:'0.82rem'}}>{f.condition}</td>
+                      </tr>
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  LOGIC PAGE
+// ════════════════════════════════════════
+
+function LogicPage() {
+  return (
+    <div className="logic-page">
+      <h1>Bundling Logic Reference</h1>
+      <p style={{color:'var(--slate)',marginBottom:'1.5rem'}}>Complete rule set for the Axcelus PPVA/PPVL Forms Bundler. For developers.</p>
+
+      <h2>1. Input Parameters</h2>
+      <table className="logic-table">
+        <thead><tr><th>ID</th><th>Type</th><th>Values</th><th>When Visible</th></tr></thead>
+        <tbody>
+          <tr><td><code>state</code></td><td>Select</td><td>50 states + DC</td><td>Always</td></tr>
+          <tr><td><code>ppm_type</code></td><td>Radio</td><td><code>3c7</code> | <code>3c1</code></td><td>Always</td></tr>
+          <tr><td><code>owner_type</code></td><td>Radio</td><td><code>individual</code> | <code>entity</code></td><td>Always</td></tr>
+          <tr><td><code>has_supporting_entity</code></td><td>Boolean</td><td>true | false</td><td><code>owner_type = entity</code></td></tr>
+          <tr><td><code>has_supporting_individual</code></td><td>Boolean</td><td>true | false</td><td><code>owner_type = entity</code></td></tr>
+          <tr><td><code>transaction_type</code></td><td>Radio</td><td><code>new_business</code> | <code>replacement</code></td><td>Always</td></tr>
+          <tr><td><code>is_applicant_60_plus</code></td><td>Boolean</td><td>true | false</td><td><code>state = CA</code></td></tr>
+          <tr><td><code>ks_insurer_type</code></td><td>Radio</td><td><code>same</code> | <code>different</code></td><td><code>state = KS</code> AND <code>transaction_type = replacement</code></td></tr>
+        </tbody>
+      </table>
+
+      <h2>2. Decision Tree — Investor Questionnaires</h2>
+      <p>The PPM type determines which investor status questionnaire to use. The owner type and entity structure determine how many sets of questionnaires are needed.</p>
+      <pre>{`IF owner_type = "individual":
+  IF ppm_type = "3c7" → IND_AIQP    (AI + QP questionnaire)
+  IF ppm_type = "3c1" → IND_AI      (AI-only questionnaire)
+  ALWAYS              → IND_RP      (Restricted Person)
+  ALWAYS              → IND_5131    (Rule 5131)
+
+IF owner_type = "entity":
+  IF ppm_type = "3c7" → ENT_AIQP
+  IF ppm_type = "3c1" → ENT_AI
+  ALWAYS              → ENT_RP
+  ALWAYS              → ENT_5131
+
+  IF has_supporting_entity:
+    IF ppm_type = "3c7" → SUP_ENT_AIQP
+    IF ppm_type = "3c1" → SUP_ENT_AI
+    ALWAYS              → SUP_ENT_RP
+    ALWAYS              → SUP_ENT_5131
+
+  IF has_supporting_individual:
+    IF ppm_type = "3c7" → SUP_IND_AIQP
+    IF ppm_type = "3c1" → SUP_IND_AI
+    ALWAYS              → SUP_IND_RP
+    ALWAYS              → SUP_IND_5131`}</pre>
+
+      <h3>Key Insight</h3>
+      <p>Each "level" (owner, supporting entity, supporting individual) always has exactly 3 forms: one PPM-type-dependent + Restricted Person + Rule 5131. The PPM type only toggles which of the first form to use (AI-QP vs AI-only).</p>
+
+      <h2>3. Operational Forms — Always Included</h2>
+      <p>These 10 forms are included for every valid order (new business). They do NOT vary by PPM type or owner type.</p>
+      <table className="logic-table">
+        <thead><tr><th>Seq</th><th>Tag</th><th>Form</th><th>State Varies?</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>PPM_RECEIPT</code></td><td>Private Placement Memorandum Receipt</td><td>No</td></tr>
+          <tr><td>2</td><td><code>APPLICATION</code></td><td>Application for Variable Annuity Contract</td><td><strong>Yes</strong> — see §5</td></tr>
+          <tr><td>3</td><td><code>W9</code></td><td>W-9</td><td>No</td></tr>
+          <tr><td>4</td><td><code>ACK</code></td><td>Acknowledgement Form</td><td>No</td></tr>
+          <tr><td>5</td><td><code>DOC_DELIVERY</code></td><td>Document Delivery Instructions</td><td>No</td></tr>
+          <tr><td>6</td><td><code>INTERESTED_PARTY</code></td><td>Interested Party Request</td><td>No</td></tr>
+          <tr><td>7</td><td><code>NOTICE_INS</code></td><td>Notice of Insurance Information Practices</td><td>No</td></tr>
+          <tr><td>8</td><td><code>PRIVACY</code></td><td>Privacy Policy</td><td>No</td></tr>
+          <tr><td>9</td><td><code>PRIVACY_CA</code></td><td>Privacy Policy — CA Residents</td><td>No (all states)</td></tr>
+          <tr><td>10</td><td><code>WIRE</code></td><td>Wire Instructions</td><td>No</td></tr>
+        </tbody>
+      </table>
+
+      <h2>4. Conditional Forms</h2>
+      <table className="logic-table">
+        <thead><tr><th>Tag</th><th>Form</th><th>Condition</th></tr></thead>
+        <tbody>
+          <tr><td><code>CA_FREE_LOOK</code></td><td>CA Senior Policy Free Look</td><td><code>state = CA AND is_applicant_60_plus = true</code></td></tr>
+          <tr><td><code>1035_EXCHANGE</code></td><td>1035 Absolute Exchange Form</td><td><code>transaction_type = replacement</code></td></tr>
+          <tr><td><code>1035_LOST</code></td><td>1035 Lost Policy Letter</td><td><code>transaction_type = replacement</code></td></tr>
+          <tr><td><code>REPLACEMENT</code></td><td>Replacement Form</td><td><code>transaction_type = replacement</code> (state-specific ID)</td></tr>
+        </tbody>
+      </table>
+
+      <h2>5. State-Specific Application Forms</h2>
+      <p>Most states use <code>APVA-197</code>. Exceptions:</p>
+      <table className="logic-table">
+        <thead><tr><th>State(s)</th><th>Form ID</th></tr></thead>
+        <tbody>
+          <tr><td>AZ</td><td><code>APVA-197AZ</code></td></tr>
+          <tr><td>AR, ME, OH</td><td><code>APVA-197F</code></td></tr>
+          <tr><td>CA</td><td><code>APVA-197CA</code></td></tr>
+          <tr><td>DC</td><td><code>APVA-197DC</code></td></tr>
+          <tr><td>FL</td><td><code>APVA-197FL</code></td></tr>
+          <tr><td>HI</td><td><code>APVA-2012</code> (different form entirely)</td></tr>
+          <tr><td>MA</td><td><code>APVA-197MA</code></td></tr>
+          <tr><td>MD</td><td><code>APVA-197MD</code></td></tr>
+          <tr><td>NC</td><td><code>APVA-197NC</code></td></tr>
+          <tr><td>NJ</td><td><code>APVA-197NJ</code></td></tr>
+          <tr><td>OK</td><td><code>APVA-197OK</code></td></tr>
+          <tr><td>TX</td><td><code>APVA-197TX</code></td></tr>
+        </tbody>
+      </table>
+
+      <h2>6. State-Specific Replacement Forms</h2>
+      <p>Most states use <code>GNLRepl-0111</code>. Key exceptions:</p>
+      <table className="logic-table">
+        <thead><tr><th>State</th><th>Form ID(s)</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>FL</td><td><code>FLReplA-0111</code> + <code>FLDFS-H1-1981</code></td><td>TWO forms required</td></tr>
+          <tr><td>IL</td><td><code>ILReplA-1112</code> + <code>ILReplB-1112</code></td><td>TWO forms required</td></tr>
+          <tr><td>KS</td><td><code>KSReplDiff-0111</code> or <code>KSReplSame-0111</code></td><td>Depends on same/different insurer</td></tr>
+          <tr><td>NV, ND</td><td>None</td><td>No replacement form exists</td></tr>
+          {[["AR","ArkCompForm-0111"],["CA","CARepl-0111"],["DE","DERepl-0111"],["GA","GARepl-1116"],
+            ["ID","IDRepl-0111"],["IN","INRepl-0111"],["MA","MARepl-0111"],["MI","MIRepl-0111"],
+            ["MN","MNRepl-0111"],["MO","MORepl-0111"],["OK","OKRepl-0111"],["PA","PARepl-0111"],
+            ["SD","SDRepl1035Ex-1116"],["TN","TNRepl-1116"],["WA","WARepl-1116"],["WY","WYRepl-0313"]
+          ].map(([st,form]) => <tr key={st}><td>{st}</td><td><code>{form}</code></td><td>State-specific</td></tr>)}
+        </tbody>
+      </table>
+
+      <h2>7. Edge Cases & Warnings</h2>
+      <ol>
+        <li><strong>NH, NY, PR</strong> — Not approved for business. No forms can be generated.</li>
+        <li><strong>FL & IL replacements</strong> — Each requires TWO separate replacement forms (not one).</li>
+        <li><strong>KS replacements</strong> — Different form depending on whether the replacing insurer is the same company or a different one.</li>
+        <li><strong>NV & ND</strong> — No replacement form exists; replacement transactions may not be supported in these states.</li>
+        <li><strong>CA Free Look</strong> — Only for California AND only when applicant is 60+ years old.</li>
+        <li><strong>Privacy Policy — CA Residents</strong> — Included for ALL states, not just California.</li>
+        <li><strong>Hawaii</strong> — Uses a completely different application form number (<code>APVA-2012</code>).</li>
+        <li><strong>Investor questionnaires</strong> — No state variation at all; purely driven by PPM type + owner type + entity structure.</li>
+      </ol>
+
+      <h2>8. Blocked States</h2>
+      <pre>{`const BLOCKED_STATES = ["NH", "NY", "PR"];
+// These states have NO forms at all in the matrix.
+// If selected, show error and return empty bundle.`}</pre>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  APP SHELL
+// ════════════════════════════════════════
+
+function App() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem("axcelus_auth") === "1");
+  const [page, setPage] = useState("bundler");
+
+  const login = () => { sessionStorage.setItem("axcelus_auth", "1"); setAuthed(true); };
+  const logout = () => { sessionStorage.removeItem("axcelus_auth"); setAuthed(false); };
+
+  if (!authed) return <LoginPage onLogin={login} />;
+
+  return (
+    <>
+      <nav className="nav">
+        <div className="nav-brand">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Axcelus Forms Bundler
+        </div>
+        <div className="nav-links">
+          <button className={`nav-link ${page==="bundler"?"active":""}`} onClick={()=>setPage("bundler")}>Bundler</button>
+          <button className={`nav-link ${page==="logic"?"active":""}`} onClick={()=>setPage("logic")}>Logic Reference</button>
+        </div>
+        <button className="nav-logout" onClick={logout}>Sign Out</button>
+      </nav>
+      {page === "bundler" ? <BundlerPage /> : <LogicPage />}
+    </>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
+</script>
+</body>
+</html>
