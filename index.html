@@ -242,6 +242,42 @@
   }
   .toggle.on::after { transform: translateX(18px); }
 
+  .counter-control {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .counter-btn {
+    width: 32px;
+    height: 30px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--slate);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .counter-btn:hover:not(:disabled) { background: var(--ice); color: var(--accent); }
+  .counter-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .counter-value {
+    width: 32px;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--navy);
+    border-left: 1.5px solid var(--border);
+    border-right: 1.5px solid var(--border);
+    line-height: 30px;
+  }
+
   .error-msg {
     background: var(--red-light);
     color: var(--red);
@@ -552,24 +588,30 @@ function generateBundle(p) {
     add("ENT_RP","Axcelus Restricted Person Questionnaire — Entity Policy Owner","—","investor","All Entities");
     add("ENT_5131","Axcelus Rule 5131 Questionnaire — Entity Policy Owner","—","investor","All Entities");
 
-    if (p.hasSupportingEntity) {
-      if (p.ppmType === "3c7") {
-        add("SUP_ENT_AIQP","Axcelus AI-QP Supporting Questionnaire (Entity)","—","investor","Supporting Entity, PPM 3(c)(7) — Accredited Investor + Qualified Purchaser");
-      } else {
-        add("SUP_ENT_AI","Axcelus AI Supporting Questionnaire (Entity)","—","investor","Supporting Entity, PPM 3(c)(1) — Accredited Investor Only");
+    if (p.supportingEntityCount > 0) {
+      for (let i = 1; i <= p.supportingEntityCount; i++) {
+        const label = p.supportingEntityCount > 1 ? " #" + i : "";
+        if (p.ppmType === "3c7") {
+          add("SUP_ENT_AIQP" + (i > 1 ? "_" + i : ""),"Axcelus AI-QP Supporting Questionnaire (Entity)" + label,"—","investor","Supporting Entity" + label + ", PPM 3(c)(7) — Accredited Investor + Qualified Purchaser");
+        } else {
+          add("SUP_ENT_AI" + (i > 1 ? "_" + i : ""),"Axcelus AI Supporting Questionnaire (Entity)" + label,"—","investor","Supporting Entity" + label + ", PPM 3(c)(1) — Accredited Investor Only");
+        }
+        add("SUP_ENT_RP" + (i > 1 ? "_" + i : ""),"Axcelus Restricted Person Supporting Questionnaire (Entity)" + label,"—","investor","Supporting Entity" + label);
+        add("SUP_ENT_5131" + (i > 1 ? "_" + i : ""),"Axcelus Rule 5131 Supporting Questionnaire (Entity)" + label,"—","investor","Supporting Entity" + label);
       }
-      add("SUP_ENT_RP","Axcelus Restricted Person Supporting Questionnaire (Entity)","—","investor","Supporting Entity");
-      add("SUP_ENT_5131","Axcelus Rule 5131 Supporting Questionnaire (Entity)","—","investor","Supporting Entity");
     }
 
-    if (p.hasSupportingIndividual) {
-      if (p.ppmType === "3c7") {
-        add("SUP_IND_AIQP","Axcelus AI-QP Supporting Questionnaire (Individual)","—","investor","Supporting Individual, PPM 3(c)(7) — Accredited Investor + Qualified Purchaser");
-      } else {
-        add("SUP_IND_AI","Axcelus AI Supporting Questionnaire (Individual)","—","investor","Supporting Individual, PPM 3(c)(1) — Accredited Investor Only");
+    if (p.supportingIndividualCount > 0) {
+      for (let i = 1; i <= p.supportingIndividualCount; i++) {
+        const label = p.supportingIndividualCount > 1 ? " #" + i : "";
+        if (p.ppmType === "3c7") {
+          add("SUP_IND_AIQP" + (i > 1 ? "_" + i : ""),"Axcelus AI-QP Supporting Questionnaire (Individual)" + label,"—","investor","Supporting Individual" + label + ", PPM 3(c)(7) — Accredited Investor + Qualified Purchaser");
+        } else {
+          add("SUP_IND_AI" + (i > 1 ? "_" + i : ""),"Axcelus AI Supporting Questionnaire (Individual)" + label,"—","investor","Supporting Individual" + label + ", PPM 3(c)(1) — Accredited Investor Only");
+        }
+        add("SUP_IND_RP" + (i > 1 ? "_" + i : ""),"Axcelus Restricted Person Supporting Questionnaire (Individual)" + label,"—","investor","Supporting Individual" + label);
+        add("SUP_IND_5131" + (i > 1 ? "_" + i : ""),"Axcelus Rule 5131 Supporting Questionnaire (Individual)" + label,"—","investor","Supporting Individual" + label);
       }
-      add("SUP_IND_RP","Axcelus Restricted Person Supporting Questionnaire (Individual)","—","investor","Supporting Individual");
-      add("SUP_IND_5131","Axcelus Rule 5131 Supporting Questionnaire (Individual)","—","investor","Supporting Individual");
     }
   }
 
@@ -627,6 +669,19 @@ function Toggle({on, onChange, label}) {
   );
 }
 
+function Counter({value, onChange, label}) {
+  return (
+    <div className="toggle-row">
+      <span className="toggle-label">{label}</span>
+      <div className="counter-control">
+        <button type="button" className="counter-btn" onClick={() => onChange(Math.max(0, value - 1))} disabled={value === 0}>−</button>
+        <span className="counter-value">{value}</span>
+        <button type="button" className="counter-btn" onClick={() => onChange(value + 1)}>+</button>
+      </div>
+    </div>
+  );
+}
+
 function CategoryBadge({cat}) {
   const cls = {investor:"cat-investor",universal:"cat-universal",state:"cat-state",conditional:"cat-conditional"};
   const labels = {investor:"Investor Qual",universal:"Universal",state:"State-Specific",conditional:"Conditional"};
@@ -673,8 +728,8 @@ function BundlerPage() {
   const [state, setState] = useState("");
   const [ppmType, setPpmType] = useState("3c7");
   const [ownerType, setOwnerType] = useState("individual");
-  const [hasSupportingEntity, setHasSupportingEntity] = useState(false);
-  const [hasSupportingIndividual, setHasSupportingIndividual] = useState(false);
+  const [supportingEntityCount, setSupportingEntityCount] = useState(0);
+  const [supportingIndividualCount, setSupportingIndividualCount] = useState(0);
   const [transactionType, setTransactionType] = useState("new_business");
   const [isApplicant60Plus, setIsApplicant60Plus] = useState(false);
   const [ksInsurerType, setKsInsurerType] = useState("different");
@@ -684,10 +739,10 @@ function BundlerPage() {
   const forms = useMemo(() => {
     if (!state || isBlocked) return [];
     return generateBundle({
-      state, ppmType, ownerType, hasSupportingEntity, hasSupportingIndividual,
+      state, ppmType, ownerType, supportingEntityCount, supportingIndividualCount,
       transactionType, isApplicant60Plus, ksInsurerType
     });
-  }, [state, ppmType, ownerType, hasSupportingEntity, hasSupportingIndividual, transactionType, isApplicant60Plus, ksInsurerType, isBlocked]);
+  }, [state, ppmType, ownerType, supportingEntityCount, supportingIndividualCount, transactionType, isApplicant60Plus, ksInsurerType, isBlocked]);
 
   return (
     <div className="bundler-page">
@@ -725,7 +780,7 @@ function BundlerPage() {
           <label className="field-label">Owner Type</label>
           <div className="radio-group">
             <div className="radio-option">
-              <input type="radio" name="owner" id="ind" value="individual" checked={ownerType==="individual"} onChange={e=>{setOwnerType(e.target.value);setHasSupportingEntity(false);setHasSupportingIndividual(false);}} />
+              <input type="radio" name="owner" id="ind" value="individual" checked={ownerType==="individual"} onChange={e=>{setOwnerType(e.target.value);setSupportingEntityCount(0);setSupportingIndividualCount(0);}} />
               <label htmlFor="ind">Individual</label>
             </div>
             <div className="radio-option">
@@ -738,8 +793,8 @@ function BundlerPage() {
         <div className={`cond-field ${ownerType==="entity" ? "visible" : "hidden"}`}>
           <div className="field" style={{background:'var(--ice)',padding:'0.75rem',borderRadius:'var(--radius)'}}>
             <label className="field-label" style={{marginBottom:'0.5rem'}}>Entity Structure</label>
-            <Toggle on={hasSupportingEntity} onChange={setHasSupportingEntity} label="Has Supporting Entity?" />
-            <Toggle on={hasSupportingIndividual} onChange={setHasSupportingIndividual} label="Has Supporting Individual?" />
+            <Counter value={supportingEntityCount} onChange={setSupportingEntityCount} label="Supporting Entities" />
+            <Counter value={supportingIndividualCount} onChange={setSupportingIndividualCount} label="Supporting Individuals" />
           </div>
         </div>
 
