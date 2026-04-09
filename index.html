@@ -8,499 +8,507 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --navy: #0B1D33;
+  --navy-light: #132B4A;
+  --navy-lighter: #1A3A5C;
+  --slate: #64748b;
+  --slate-light: #94a3b8;
+  --ice: #E8F0FE;
+  --ice-dark: #D1DFEF;
+  --white: #FAFBFD;
+  --accent: #2563EB;
+  --accent-hover: #1D4ED8;
+  --accent-light: #DBEAFE;
+  --green: #059669;
+  --green-light: #D1FAE5;
+  --amber: #D97706;
+  --amber-light: #FEF3C7;
+  --red: #DC2626;
+  --red-light: #FEE2E2;
+  --border: #E2E8F0;
+  --shadow: 0 1px 3px rgba(11,29,51,0.08), 0 1px 2px rgba(11,29,51,0.06);
+  --shadow-lg: 0 10px 25px rgba(11,29,51,0.1), 0 4px 10px rgba(11,29,51,0.06);
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  background: var(--white);
+  color: var(--navy);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
 
-  :root {
-    --navy: #0B1D33;
-    --navy-light: #132B4A;
-    --navy-lighter: #1A3A5C;
-    --slate: #64748b;
-    --slate-light: #94a3b8;
-    --ice: #E8F0FE;
-    --ice-dark: #D1DFEF;
-    --white: #FAFBFD;
-    --accent: #2563EB;
-    --accent-hover: #1D4ED8;
-    --accent-light: #DBEAFE;
-    --green: #059669;
-    --green-light: #D1FAE5;
-    --amber: #D97706;
-    --amber-light: #FEF3C7;
-    --red: #DC2626;
-    --red-light: #FEE2E2;
-    --border: #E2E8F0;
-    --shadow: 0 1px 3px rgba(11,29,51,0.08), 0 1px 2px rgba(11,29,51,0.06);
-    --shadow-lg: 0 10px 25px rgba(11,29,51,0.1), 0 4px 10px rgba(11,29,51,0.06);
-    --radius: 8px;
-    --radius-lg: 12px;
-  }
+/* ── NAV ── */
+.nav {
+  background: var(--navy);
+  color: white;
+  padding: 0 2rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-links { display: flex; gap: 0.25rem; }
+.nav-link {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.15s;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+.nav-link.active { color: white; background: rgba(255,255,255,0.15); }
+.nav-logout {
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: none;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.nav-logout:hover { color: white; border-color: rgba(255,255,255,0.3); }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* ── LOGIN ── */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-lighter) 100%);
+}
+.login-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: var(--shadow-lg);
+}
+.login-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+}
+.login-sub {
+  color: var(--slate);
+  font-size: 0.875rem;
+  margin-bottom: 1.75rem;
+}
 
-  body {
-    font-family: 'DM Sans', -apple-system, sans-serif;
-    background: var(--white);
-    color: var(--navy);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+/* ── FORM ELEMENTS ── */
+.field { margin-bottom: 1.25rem; }
+.field-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--slate-light);
+  margin-top: 0.2rem;
+}
+select, input[type="password"], input[type="text"] {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--navy);
+  background: white;
+  transition: border-color 0.15s;
+  outline: none;
+}
+select:focus, input:focus { border-color: var(--accent); }
+select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' stroke='%2364748b' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-primary { background: var(--accent); color: white; width: 100%; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--slate);
+}
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.radio-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.radio-option { flex: 1; min-width: 120px; }
+.radio-option input { display: none; }
+.radio-option label {
+  display: block;
+  padding: 0.55rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--slate);
+}
+.radio-option input:checked + label {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.radio-option label:hover { border-color: var(--slate-light); }
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 0.875rem; font-weight: 500; }
+.toggle {
+  width: 40px; height: 22px;
+  background: var(--border);
+  border-radius: 11px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+  border: none;
+}
+.toggle.on { background: var(--accent); }
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  background: white;
+  border-radius: 50%;
+  top: 2px; left: 2px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.on::after { transform: translateX(18px); }
+.counter-control {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.counter-btn {
+  width: 32px; height: 30px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--slate);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.counter-btn:hover:not(:disabled) { background: var(--ice); color: var(--accent); }
+.counter-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.counter-value {
+  width: 32px;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--navy);
+  border-left: 1.5px solid var(--border);
+  border-right: 1.5px solid var(--border);
+  line-height: 30px;
+}
+.error-msg {
+  background: var(--red-light);
+  color: var(--red);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+.warning-msg {
+  background: var(--amber-light);
+  color: var(--amber);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
 
-  .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
+/* ── BUNDLER LAYOUT ── */
+.bundler-page { display: flex; min-height: calc(100vh - 56px); }
+.bundler-sidebar {
+  width: 380px;
+  min-width: 380px;
+  padding: 1.5rem;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: white;
+}
+.bundler-main {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  background: var(--white);
+}
+@media (max-width: 900px) {
+  .bundler-page { flex-direction: column; }
+  .bundler-sidebar { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid var(--border); }
+}
+.sidebar-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
 
-  /* ── NAV ── */
-  .nav {
-    background: var(--navy);
-    color: white;
-    padding: 0 2rem;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .nav-brand {
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: -0.02em;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .nav-brand svg { opacity: 0.7; }
-  .nav-links { display: flex; gap: 0.25rem; }
-  .nav-link {
-    color: rgba(255,255,255,0.65);
-    text-decoration: none;
-    padding: 0.4rem 0.85rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.15s;
-    cursor: pointer;
-    border: none;
-    background: none;
-  }
-  .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
-  .nav-link.active { color: white; background: rgba(255,255,255,0.15); }
-  .nav-logout {
-    color: rgba(255,255,255,0.5);
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 0.3rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    background: none;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-  .nav-logout:hover { color: white; border-color: rgba(255,255,255,0.3); }
+/* ── RESULTS TABLE ── */
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.results-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.01em; }
+.results-count {
+  font-size: 0.85rem;
+  color: var(--slate);
+  background: var(--ice);
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.form-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.form-table th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--slate);
+  background: var(--ice);
+  border-bottom: 2px solid var(--ice-dark);
+  position: sticky;
+  top: 0;
+}
+.form-table td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.form-table tr:hover td { background: rgba(37,99,235,0.03); }
+.cat-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cat-investor { background: #EDE9FE; color: #6D28D9; }
+.cat-universal { background: var(--accent-light); color: var(--accent); }
+.cat-state { background: var(--green-light); color: var(--green); }
+.cat-conditional { background: var(--amber-light); color: var(--amber); }
+.cat-guaranty { background: #FEE2E2; color: #B91C1C; }
+.cat-attachment { background: #E0E7FF; color: #4338CA; }
+.cat-divider td {
+  padding: 0.6rem 0.75rem;
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate);
+  background: var(--ice);
+  border-bottom: 1px solid var(--ice-dark);
+}
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--slate);
+}
+.empty-state svg { margin-bottom: 1rem; opacity: 0.3; }
+.empty-state p { font-size: 0.95rem; }
 
-  /* ── LOGIN ── */
-  .login-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-lighter) 100%);
-  }
-  .login-card {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 380px;
-    box-shadow: var(--shadow-lg);
-  }
-  .login-title {
-    font-size: 1.35rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-    letter-spacing: -0.02em;
-  }
-  .login-sub {
-    color: var(--slate);
-    font-size: 0.875rem;
-    margin-bottom: 1.75rem;
-  }
+/* ── CLICKABLE FORM LINK ── */
+.form-link {
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.form-link:hover { color: var(--accent-hover); text-decoration: underline; }
+.missing-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  background: var(--red);
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.present-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.form-name-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
 
-  /* ── FORM ELEMENTS ── */
-  .field { margin-bottom: 1.25rem; }
-  .field-label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--slate);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.4rem;
-  }
-  .field-hint {
-    font-size: 0.78rem;
-    color: var(--slate-light);
-    margin-top: 0.2rem;
-  }
+/* ── FORMS PAGE ── */
+.forms-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.forms-page h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+.forms-page h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--ice);
+}
+.forms-summary {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.forms-summary-card {
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.forms-summary-card .num { font-size: 1.5rem; font-weight: 700; display: block; }
 
-  select, input[type="password"], input[type="text"] {
-    width: 100%;
-    padding: 0.6rem 0.85rem;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 0.9rem;
-    color: var(--navy);
-    background: white;
-    transition: border-color 0.15s;
-    outline: none;
-  }
-  select:focus, input:focus { border-color: var(--accent); }
-  select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' stroke='%2364748b' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
+/* ── LOGIC PAGE ── */
+.logic-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.logic-page h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+.logic-page h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--ice);
+}
+.logic-page h3 { font-size: 0.95rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+.logic-page p, .logic-page li { font-size: 0.9rem; line-height: 1.7; color: #334155; }
+.logic-page ul, .logic-page ol { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+.logic-page li { margin-bottom: 0.35rem; }
+.logic-page code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82em;
+  background: var(--ice);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--accent);
+}
+.logic-page pre {
+  background: var(--navy);
+  color: #E2E8F0;
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin: 0.75rem 0 1rem;
+}
+.logic-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin: 0.75rem 0 1rem;
+}
+.logic-table th {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  background: var(--ice);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate);
+  border-bottom: 2px solid var(--ice-dark);
+}
+.logic-table td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1.25rem;
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .btn-primary { background: var(--accent); color: white; width: 100%; }
-  .btn-primary:hover { background: var(--accent-hover); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+/* ── PRINT ── */
+@media print {
+  .nav, .bundler-sidebar, .nav-logout { display: none !important; }
+  .bundler-main { padding: 0; }
+  .form-table th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 
-  .btn-outline {
-    background: transparent;
-    border: 1.5px solid var(--border);
-    color: var(--slate);
-  }
-  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-
-  .radio-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .radio-option {
-    flex: 1;
-    min-width: 120px;
-  }
-  .radio-option input { display: none; }
-  .radio-option label {
-    display: block;
-    padding: 0.55rem 0.85rem;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    text-align: center;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--slate);
-  }
-  .radio-option input:checked + label {
-    border-color: var(--accent);
-    background: var(--accent-light);
-    color: var(--accent);
-  }
-  .radio-option label:hover { border-color: var(--slate-light); }
-
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.6rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .toggle-row:last-child { border-bottom: none; }
-  .toggle-label { font-size: 0.875rem; font-weight: 500; }
-  .toggle {
-    width: 40px;
-    height: 22px;
-    background: var(--border);
-    border-radius: 11px;
-    position: relative;
-    cursor: pointer;
-    transition: background 0.2s;
-    flex-shrink: 0;
-    border: none;
-  }
-  .toggle.on { background: var(--accent); }
-  .toggle::after {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    background: white;
-    border-radius: 50%;
-    top: 2px;
-    left: 2px;
-    transition: transform 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  }
-  .toggle.on::after { transform: translateX(18px); }
-
-  .counter-control {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .counter-btn {
-    width: 32px;
-    height: 30px;
-    border: none;
-    background: white;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--slate);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-    font-family: inherit;
-  }
-  .counter-btn:hover:not(:disabled) { background: var(--ice); color: var(--accent); }
-  .counter-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .counter-value {
-    width: 32px;
-    text-align: center;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--navy);
-    border-left: 1.5px solid var(--border);
-    border-right: 1.5px solid var(--border);
-    line-height: 30px;
-  }
-
-  .error-msg {
-    background: var(--red-light);
-    color: var(--red);
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-    margin-bottom: 1rem;
-    font-weight: 500;
-  }
-  .warning-msg {
-    background: var(--amber-light);
-    color: var(--amber);
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-    font-weight: 500;
-  }
-
-  /* ── BUNDLER LAYOUT ── */
-  .bundler-page { display: flex; min-height: calc(100vh - 56px); }
-  .bundler-sidebar {
-    width: 380px;
-    min-width: 380px;
-    padding: 1.5rem;
-    border-right: 1px solid var(--border);
-    overflow-y: auto;
-    background: white;
-  }
-  .bundler-main {
-    flex: 1;
-    padding: 1.5rem 2rem;
-    overflow-y: auto;
-    background: var(--white);
-  }
-  @media (max-width: 900px) {
-    .bundler-page { flex-direction: column; }
-    .bundler-sidebar { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid var(--border); }
-  }
-
-  .sidebar-title {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 1.25rem;
-    letter-spacing: -0.01em;
-  }
-
-  /* ── RESULTS TABLE ── */
-  .results-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-  .results-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-  .results-count {
-    font-size: 0.85rem;
-    color: var(--slate);
-    background: var(--ice);
-    padding: 0.25rem 0.65rem;
-    border-radius: 20px;
-    font-weight: 600;
-  }
-
-  .form-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-  }
-  .form-table th {
-    text-align: left;
-    padding: 0.6rem 0.75rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--slate);
-    background: var(--ice);
-    border-bottom: 2px solid var(--ice-dark);
-    position: sticky;
-    top: 0;
-  }
-  .form-table td {
-    padding: 0.55rem 0.75rem;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-  .form-table tr:hover td { background: rgba(37,99,235,0.03); }
-
-  .cat-badge {
-    display: inline-block;
-    padding: 0.15rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .cat-investor { background: #EDE9FE; color: #6D28D9; }
-  .cat-universal { background: var(--accent-light); color: var(--accent); }
-  .cat-state { background: var(--green-light); color: var(--green); }
-  .cat-conditional { background: var(--amber-light); color: var(--amber); }
-
-  .cat-divider td {
-    padding: 0.6rem 0.75rem;
-    font-weight: 700;
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--slate);
-    background: var(--ice);
-    border-bottom: 1px solid var(--ice-dark);
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: var(--slate);
-  }
-  .empty-state svg { margin-bottom: 1rem; opacity: 0.3; }
-  .empty-state p { font-size: 0.95rem; }
-
-  /* ── LOGIC PAGE ── */
-  .logic-page {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-  .logic-page h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
-  }
-  .logic-page h2 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 2px solid var(--ice);
-    letter-spacing: -0.01em;
-  }
-  .logic-page h3 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-top: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-  .logic-page p, .logic-page li {
-    font-size: 0.9rem;
-    line-height: 1.7;
-    color: #334155;
-  }
-  .logic-page ul, .logic-page ol { padding-left: 1.25rem; margin-bottom: 0.75rem; }
-  .logic-page li { margin-bottom: 0.35rem; }
-  .logic-page code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82em;
-    background: var(--ice);
-    padding: 0.15em 0.4em;
-    border-radius: 4px;
-    color: var(--accent);
-  }
-  .logic-page pre {
-    background: var(--navy);
-    color: #E2E8F0;
-    padding: 1.25rem;
-    border-radius: var(--radius);
-    overflow-x: auto;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    line-height: 1.6;
-    margin: 0.75rem 0 1rem;
-  }
-  .logic-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.82rem;
-    margin: 0.75rem 0 1rem;
-  }
-  .logic-table th {
-    text-align: left;
-    padding: 0.5rem 0.6rem;
-    background: var(--ice);
-    font-weight: 600;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--slate);
-    border-bottom: 2px solid var(--ice-dark);
-  }
-  .logic-table td {
-    padding: 0.45rem 0.6rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  /* ── PRINT ── */
-  @media print {
-    .nav, .bundler-sidebar, .nav-logout { display: none !important; }
-    .bundler-main { padding: 0; }
-    .form-table th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  }
-
-  /* ── CONDITIONAL FIELD ANIMATION ── */
-  .cond-field {
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-  }
-  .cond-field.hidden { max-height: 0; opacity: 0; pointer-events: none; margin: 0; }
-  .cond-field.visible { max-height: 200px; opacity: 1; }
+/* ── CONDITIONAL FIELD ANIMATION ── */
+.cond-field { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
+.cond-field.hidden { max-height: 0; opacity: 0; pointer-events: none; margin: 0; }
+.cond-field.visible { max-height: 200px; opacity: 1; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useMemo, useCallback } = React;
+const { useState, useEffect, useMemo } = React;
 
 // ════════════════════════════════════════
-//  DATA
+// DATA
 // ════════════════════════════════════════
 
 const STATES = [
@@ -524,7 +532,10 @@ const STATES = [
 ];
 
 const BLOCKED = ["NH","NY","PR"];
+const FORMS_BASE = "forms/";
+const PASSWORD = "axcelus2025";
 
+// ── Application form IDs by state ──
 const APP_FORMS = {
   AL:"APVA-197",AK:"APVA-197",AZ:"APVA-197AZ",AR:"APVA-197F",CA:"APVA-197CA",
   CO:"APVA-197",CT:"APVA-197",DE:"APVA-197",DC:"APVA-197DC",FL:"APVA-197FL",
@@ -538,6 +549,7 @@ const APP_FORMS = {
   WA:"APVA-197",WV:"APVA-197",WI:"APVA-197",WY:"APVA-197"
 };
 
+// ── Replacement form IDs by state ──
 const REPL_FORMS = {
   AL:["GNLRepl-0111"],AK:["GNLRepl-0111"],AZ:["GNLRepl-0111"],
   AR:["ArkCompForm-0111"],CA:["CARepl-0111"],CO:["GNLRepl-0111"],
@@ -555,10 +567,263 @@ const REPL_FORMS = {
   WI:["GNLRepl-0111"],WY:["WYRepl-0313"]
 };
 
-const PASSWORD = "axcelus2025";
+// ── Guaranty notice files by state (null = use DEFAULT) ──
+const GUARANTY_MAP = {
+  AL:null,AK:"GUAR_AK.pdf",AZ:null,AR:"GUAR_AR.pdf",CA:"GUAR_CA.pdf",
+  CO:"GUAR_CO.pdf",CT:null,DE:null,DC:null,FL:null,GA:null,HI:"GUAR_HI.pdf",
+  ID:"GUAR_ID.pdf",IL:"GUAR_IL.pdf",IN:"GUAR_IN.pdf",IA:"GUAR_IA.pdf",
+  KS:"GUAR_KS.pdf",KY:null,LA:"GUAR_LA.pdf",ME:null,MD:"GUAR_MD.pdf",
+  MA:null,MI:null,MN:"GUAR_MN.pdf",MS:"GUAR_MS.pdf",MO:"GUAR_MO.pdf",
+  MT:"GUAR_MT.pdf",NE:null,NV:"GUAR_NV.pdf",NJ:"GUAR_NJ.pdf",NM:"GUAR_NM.pdf",
+  NC:"GUAR_NC.pdf",ND:"GUAR_ND.pdf",OH:"GUAR_OH.pdf",OK:"GUAR_OK.pdf",
+  OR:null,PA:"GUAR_PA.pdf",RI:"GUAR_RI.pdf",SC:"GUAR_SC.pdf",SD:"GUAR_SD.pdf",
+  TN:"GUAR_TN.pdf",TX:"GUAR_TX.pdf",UT:"GUAR_UT.pdf",VT:null,VA:"GUAR_VA.pdf",
+  WA:"GUAR_WA.pdf",WV:"GUAR_WV.pdf",WI:null,WY:"GUAR_WY.pdf"
+};
 
 // ════════════════════════════════════════
-//  BUNDLING ENGINE
+// FILE MAPPING — tag/formId → filename
+// ════════════════════════════════════════
+
+const FILE_MAP = {
+  // ── Investor Questionnaires ──
+  "IND_AIQP":       "IQ_IND_AIQP.pdf",
+  "IND_AI":         "IQ_IND_AI.pdf",
+  "IND_RP":         "IQ_IND_RP.pdf",
+  "IND_5131":       "IQ_IND_5131.pdf",
+  "ENT_AIQP":       "IQ_ENT_AIQP.pdf",
+  "ENT_AI":         "IQ_ENT_AI.pdf",
+  "ENT_RP":         "IQ_ENT_RP.pdf",
+  "ENT_5131":       "IQ_ENT_5131.pdf",
+  "SUP_ENT_AIQP":   "IQ_SUP_ENT_AIQP.pdf",
+  "SUP_ENT_AI":     "IQ_SUP_ENT_AI.pdf",
+  "SUP_ENT_RP":     "IQ_SUP_ENT_RP.pdf",
+  "SUP_ENT_5131":   "IQ_SUP_ENT_5131.pdf",
+  "SUP_IND_AIQP":   "IQ_SUP_IND_AIQP.pdf",
+  "SUP_IND_AI":     "IQ_SUP_IND_AI.pdf",
+  "SUP_IND_RP":     "IQ_SUP_IND_RP.pdf",
+  "SUP_IND_5131":   "IQ_SUP_IND_5131.pdf",
+
+  // ── Application forms (by formId) ──
+  "APVA-197":       "APP_DEFAULT_APVA-197.pdf",
+  "APVA-197AZ":     "APP_AZ_APVA-197AZ.pdf",
+  "APVA-197F":      "APP_F_APVA-197F.pdf",
+  "APVA-197CA":     "APP_CA_APVA-197CA.pdf",
+  "APVA-197DC":     "APP_DC_APVA-197DC.pdf",
+  "APVA-197FL":     "APP_FL_APVA-197FL.pdf",
+  "APVA-2012":      "APP_HI_APVA-2012.pdf",
+  "APVA-197MA":     "APP_MA_APVA-197MA.pdf",
+  "APVA-197MD":     "APP_MD_APVA-197MD.pdf",
+  "APVA-197NC":     "APP_NC_APVA-197NC.pdf",
+  "APVA-197NJ":     "APP_NJ_APVA-197NJ.pdf",
+  "APVA-197OK":     "APP_OK_APVA-197OK.pdf",
+  "APVA-197TX":     "APP_TX_APVA-197TX.pdf",
+
+  // ── Replacement forms (by formId) ──
+  "GNLRepl-0111":       "REPL_DEFAULT_GNLRepl-0111.pdf",
+  "ArkCompForm-0111":   "REPL_AR_ArkCompForm-0111.pdf",
+  "CARepl-0111":        "REPL_CA_CARepl-0111.pdf",
+  "DERepl-0111":        "REPL_DE_DERepl-0111.pdf",
+  "FLReplA-0111":       "REPL_FL_FLReplA-0111.pdf",
+  "FLDFS-H1-1981":      "REPL_FL_DFS-H1-1981.pdf",
+  "GARepl-1116":        "REPL_GA_GARepl-1116.pdf",
+  "IDRepl-0111":        "REPL_ID_IDRepl-0111.pdf",
+  "ILReplA-1112":       "REPL_IL_ILReplA-1112.pdf",
+  "ILReplB-1112":       "REPL_IL_ILReplB-1112.pdf",
+  "INRepl-0111":        "REPL_IN_INRepl-0111.pdf",
+  "KSReplDiff-0111":    "REPL_KS_KSReplDiff-0111.pdf",
+  "KSReplSame-0111":    "REPL_KS_KSReplSame-0111.pdf",
+  "MARepl-0111":        "REPL_MA_MARepl-0111.pdf",
+  "MIRepl-0111":        "REPL_MI_MIRepl-0111.pdf",
+  "MNRepl-0111":        "REPL_MN_MNRepl-0111.pdf",
+  "MORepl-0111":        "REPL_MO_MORepl-0111.pdf",
+  "OKRepl-0111":        "REPL_OK_OKRepl-0111.pdf",
+  "PARepl-0111":        null, // MISSING FILE
+  "SDRepl1035Ex-1116":  "REPL_SD_SDRepl1035Ex-1116.pdf",
+  "TNRepl-1116":        "REPL_TN_TNRepl-1116.pdf",
+  "WARepl-1116":        "REPL_WA_WARepl-1116.pdf",
+  "WYRepl-0313":        null, // MISSING FILE
+
+  // ── Operational forms (by tag) ──
+  "PPM_RECEIPT":        "OPS_PPM_RECEIPT.docx",
+  "W9":                 "OPS_W9.pdf",
+  "ACK":                "OPS_ACKNOWLEDGMENT.docx",
+  "DOC_DELIVERY":       "OPS_DOC_DELIVERY.docx",
+  "INTERESTED_PARTY":   "OPS_INTERESTED_PARTY.docx",
+  "NOTICE_INS":         "OPS_NOTICE_INSURANCE.pdf",
+  "PRIVACY":            "OPS_PRIVACY_POLICY.pdf",
+  "PRIVACY_CA":         "OPS_PRIVACY_POLICY_CA.pdf",
+  "WIRE":               "OPS_WIRE_INSTRUCTIONS.pdf",
+  "COMPENSATION_ACK":   "OPS_COMPENSATION_ACK.docx",
+
+  // ── Conditional forms (by tag) ──
+  "1035_EXCHANGE":      "COND_1035_EXCHANGE.docx",
+  "1035_LOST":          "COND_1035_LOST_POLICY.docx",
+  "CA_FREE_LOOK":       "COND_CA_FREE_LOOK.pdf",
+  "TAX_CERT_EXCHANGE":  "COND_TAX_CERT_EXCHANGE.pdf",
+
+  // ── FL-specific extra forms ──
+  "FL_DFS_H1_1980":     "REPL_FL_DFS-H1-1980.pdf",
+  "FL_DI4_1180":        "REPL_FL_DI4-1180-0111.pdf",
+
+  // ── Attachments (by tag) ──
+  "ATT_BENEFICIARIES":  "ATT_LIST_OF_BENEFICIARIES.pdf",
+  "ATT_ALLOCATION":     "ATT_ALLOCATION_FORM.pdf",
+  "ATT_REPLACEMENT":    "ATT_REPLACEMENT.pdf",
+};
+
+// Resolve file for a form entry: check tag first, then formId
+function resolveFile(tag, formId) {
+  // Strip numbered suffixes for supporting entity/individual duplicates
+  const baseTag = tag.replace(/_\d+$/, "");
+  if (FILE_MAP[baseTag] !== undefined) return FILE_MAP[baseTag];
+  if (formId && FILE_MAP[formId] !== undefined) return FILE_MAP[formId];
+  return undefined; // truly unknown
+}
+
+function getFileUrl(filename) {
+  if (!filename) return null;
+  return FORMS_BASE + encodeURIComponent(filename);
+}
+
+// ════════════════════════════════════════
+// MASTER FILE LIST (for Forms page)
+// ════════════════════════════════════════
+
+const ALL_FILES = [
+  // Investor Questionnaires
+  {file:"IQ_IND_AIQP.pdf", cat:"investor", desc:"AI-QP Questionnaire — Individual Policy Owner"},
+  {file:"IQ_IND_AI.pdf", cat:"investor", desc:"AI Questionnaire — Individual Policy Owner"},
+  {file:"IQ_IND_RP.pdf", cat:"investor", desc:"Restricted Person Questionnaire — Individual Policy Owner"},
+  {file:"IQ_IND_5131.pdf", cat:"investor", desc:"Rule 5131 Questionnaire — Individual Policy Owner"},
+  {file:"IQ_ENT_AIQP.pdf", cat:"investor", desc:"AI-QP Questionnaire — Entity Policy Owner"},
+  {file:"IQ_ENT_AI.pdf", cat:"investor", desc:"AI Questionnaire — Entity Policy Owner"},
+  {file:"IQ_ENT_RP.pdf", cat:"investor", desc:"Restricted Person Questionnaire — Entity Policy Owner"},
+  {file:"IQ_ENT_5131.pdf", cat:"investor", desc:"Rule 5131 Questionnaire — Entity Policy Owner"},
+  {file:"IQ_SUP_ENT_AIQP.pdf", cat:"investor", desc:"AI-QP Supporting Questionnaire (Entity)"},
+  {file:"IQ_SUP_ENT_AI.pdf", cat:"investor", desc:"AI Supporting Questionnaire (Entity)"},
+  {file:"IQ_SUP_ENT_RP.pdf", cat:"investor", desc:"Restricted Person Supporting Questionnaire (Entity)"},
+  {file:"IQ_SUP_ENT_5131.pdf", cat:"investor", desc:"Rule 5131 Supporting Questionnaire (Entity)"},
+  {file:"IQ_SUP_IND_AIQP.pdf", cat:"investor", desc:"AI-QP Supporting Questionnaire (Individual)"},
+  {file:"IQ_SUP_IND_AI.pdf", cat:"investor", desc:"AI Supporting Questionnaire (Individual)"},
+  {file:"IQ_SUP_IND_RP.pdf", cat:"investor", desc:"Restricted Person Supporting Questionnaire (Individual)"},
+  {file:"IQ_SUP_IND_5131.pdf", cat:"investor", desc:"Rule 5131 Supporting Questionnaire (Individual)"},
+  // Duplicate v2 copies
+  {file:"IQ_ENT_AIQP_v2.pdf", cat:"investor", desc:"AI-QP Questionnaire — Entity (v2 copy)"},
+  {file:"IQ_ENT_RP_v2.pdf", cat:"investor", desc:"Restricted Person Questionnaire — Entity (v2 copy)"},
+  {file:"IQ_ENT_5131_v2.pdf", cat:"investor", desc:"Rule 5131 Questionnaire — Entity (v2 copy)"},
+  {file:"IQ_SUP_ENT_AIQP_v2.pdf", cat:"investor", desc:"AI-QP Supporting Questionnaire Entity (v2 copy)"},
+  {file:"IQ_SUP_ENT_RP_v2.pdf", cat:"investor", desc:"Restricted Person Supporting Entity (v2 copy)"},
+  {file:"IQ_SUP_ENT_5131_v2.pdf", cat:"investor", desc:"Rule 5131 Supporting Entity (v2 copy)"},
+  {file:"IQ_SUP_IND_AIQP_v2.pdf", cat:"investor", desc:"AI-QP Supporting Questionnaire Individual (v2 copy)"},
+  {file:"IQ_SUP_IND_RP_v2.pdf", cat:"investor", desc:"Restricted Person Supporting Individual (v2 copy)"},
+  {file:"IQ_SUP_IND_5131_v2.pdf", cat:"investor", desc:"Rule 5131 Supporting Individual (v2 copy)"},
+  // Application forms
+  {file:"APP_DEFAULT_APVA-197.pdf", cat:"application", desc:"Application — Default (APVA-197)"},
+  {file:"APP_AZ_APVA-197AZ.pdf", cat:"application", desc:"Application — Arizona"},
+  {file:"APP_F_APVA-197F.pdf", cat:"application", desc:"Application — AR/ME/OH (APVA-197F)"},
+  {file:"APP_CA_APVA-197CA.pdf", cat:"application", desc:"Application — California"},
+  {file:"APP_DC_APVA-197DC.pdf", cat:"application", desc:"Application — DC"},
+  {file:"APP_FL_APVA-197FL.pdf", cat:"application", desc:"Application — Florida"},
+  {file:"APP_HI_APVA-2012.pdf", cat:"application", desc:"Application — Hawaii (APVA-2012)"},
+  {file:"APP_MA_APVA-197MA.pdf", cat:"application", desc:"Application — Massachusetts"},
+  {file:"APP_MD_APVA-197MD.pdf", cat:"application", desc:"Application — Maryland"},
+  {file:"APP_NC_APVA-197NC.pdf", cat:"application", desc:"Application — North Carolina"},
+  {file:"APP_NJ_APVA-197NJ.pdf", cat:"application", desc:"Application — New Jersey"},
+  {file:"APP_OK_APVA-197OK.pdf", cat:"application", desc:"Application — Oklahoma"},
+  {file:"APP_TX_APVA-197TX.pdf", cat:"application", desc:"Application — Texas"},
+  // Replacement forms
+  {file:"REPL_DEFAULT_GNLRepl-0111.pdf", cat:"replacement", desc:"Replacement — Default (GNLRepl-0111)"},
+  {file:"REPL_AR_ArkCompForm-0111.pdf", cat:"replacement", desc:"Replacement — Arkansas"},
+  {file:"REPL_CA_CARepl-0111.pdf", cat:"replacement", desc:"Replacement — California"},
+  {file:"REPL_DE_DERepl-0111.pdf", cat:"replacement", desc:"Replacement — Delaware"},
+  {file:"REPL_FL_FLReplA-0111.pdf", cat:"replacement", desc:"Replacement — Florida (A)"},
+  {file:"REPL_FL_DFS-H1-1981.pdf", cat:"replacement", desc:"Replacement — Florida DFS-H1-1981"},
+  {file:"REPL_FL_DFS-H1-1980.pdf", cat:"replacement", desc:"FL Disclosure DFS-H1-1980"},
+  {file:"REPL_FL_DI4-1180-0111.pdf", cat:"replacement", desc:"FL Form DI4-1180-0111"},
+  {file:"REPL_GA_GARepl-1116.pdf", cat:"replacement", desc:"Replacement — Georgia"},
+  {file:"REPL_ID_IDRepl-0111.pdf", cat:"replacement", desc:"Replacement — Idaho"},
+  {file:"REPL_IL_ILReplA-1112.pdf", cat:"replacement", desc:"Replacement — Illinois (A)"},
+  {file:"REPL_IL_ILReplB-1112.pdf", cat:"replacement", desc:"Replacement — Illinois (B)"},
+  {file:"REPL_IN_INRepl-0111.pdf", cat:"replacement", desc:"Replacement — Indiana"},
+  {file:"REPL_KS_KSReplDiff-0111.pdf", cat:"replacement", desc:"Replacement — Kansas (Different Insurer)"},
+  {file:"REPL_KS_KSReplSame-0111.pdf", cat:"replacement", desc:"Replacement — Kansas (Same Insurer)"},
+  {file:"REPL_MA_MARepl-0111.pdf", cat:"replacement", desc:"Replacement — Massachusetts"},
+  {file:"REPL_MI_MIRepl-0111.pdf", cat:"replacement", desc:"Replacement — Michigan"},
+  {file:"REPL_MN_MNRepl-0111.pdf", cat:"replacement", desc:"Replacement — Minnesota"},
+  {file:"REPL_MO_MORepl-0111.pdf", cat:"replacement", desc:"Replacement — Missouri"},
+  {file:"REPL_OK_OKRepl-0111.pdf", cat:"replacement", desc:"Replacement — Oklahoma"},
+  {file:"REPL_SD_SDRepl1035Ex-1116.pdf", cat:"replacement", desc:"Replacement — South Dakota"},
+  {file:"REPL_TN_TNRepl-1116.pdf", cat:"replacement", desc:"Replacement — Tennessee"},
+  {file:"REPL_WA_WARepl-1116.pdf", cat:"replacement", desc:"Replacement — Washington"},
+  {file:"REPL_WA_WARepl-1116_legacy.doc", cat:"replacement", desc:"Replacement — Washington (legacy .doc)"},
+  // Guaranty notices
+  {file:"GUAR_DEFAULT.pdf", cat:"guaranty", desc:"Guaranty Notice — Default"},
+  {file:"GUAR_AK.pdf", cat:"guaranty", desc:"Guaranty Notice — Alaska"},
+  {file:"GUAR_AR.pdf", cat:"guaranty", desc:"Guaranty Notice — Arkansas"},
+  {file:"GUAR_CA.pdf", cat:"guaranty", desc:"Guaranty Notice — California"},
+  {file:"GUAR_CO.pdf", cat:"guaranty", desc:"Guaranty Notice — Colorado"},
+  {file:"GUAR_HI.pdf", cat:"guaranty", desc:"Guaranty Notice — Hawaii"},
+  {file:"GUAR_IA.pdf", cat:"guaranty", desc:"Guaranty Notice — Iowa"},
+  {file:"GUAR_ID.pdf", cat:"guaranty", desc:"Guaranty Notice — Idaho"},
+  {file:"GUAR_IL.pdf", cat:"guaranty", desc:"Guaranty Notice — Illinois"},
+  {file:"GUAR_IN.pdf", cat:"guaranty", desc:"Guaranty Notice — Indiana"},
+  {file:"GUAR_KS.pdf", cat:"guaranty", desc:"Guaranty Notice — Kansas"},
+  {file:"GUAR_LA.pdf", cat:"guaranty", desc:"Guaranty Notice — Louisiana"},
+  {file:"GUAR_MD.pdf", cat:"guaranty", desc:"Guaranty Notice — Maryland"},
+  {file:"GUAR_MN.pdf", cat:"guaranty", desc:"Guaranty Notice — Minnesota"},
+  {file:"GUAR_MO.pdf", cat:"guaranty", desc:"Guaranty Notice — Missouri"},
+  {file:"GUAR_MS.pdf", cat:"guaranty", desc:"Guaranty Notice — Mississippi"},
+  {file:"GUAR_MT.pdf", cat:"guaranty", desc:"Guaranty Notice — Montana"},
+  {file:"GUAR_NC.pdf", cat:"guaranty", desc:"Guaranty Notice — North Carolina"},
+  {file:"GUAR_ND.pdf", cat:"guaranty", desc:"Guaranty Notice — North Dakota"},
+  {file:"GUAR_NH.pdf", cat:"guaranty", desc:"Guaranty Notice — New Hampshire"},
+  {file:"GUAR_NJ.pdf", cat:"guaranty", desc:"Guaranty Notice — New Jersey"},
+  {file:"GUAR_NM.pdf", cat:"guaranty", desc:"Guaranty Notice — New Mexico"},
+  {file:"GUAR_NV.pdf", cat:"guaranty", desc:"Guaranty Notice — Nevada"},
+  {file:"GUAR_OH.pdf", cat:"guaranty", desc:"Guaranty Notice — Ohio"},
+  {file:"GUAR_OK.pdf", cat:"guaranty", desc:"Guaranty Notice — Oklahoma"},
+  {file:"GUAR_PA.pdf", cat:"guaranty", desc:"Guaranty Notice — Pennsylvania"},
+  {file:"GUAR_RI.pdf", cat:"guaranty", desc:"Guaranty Notice — Rhode Island"},
+  {file:"GUAR_SC.pdf", cat:"guaranty", desc:"Guaranty Notice — South Carolina"},
+  {file:"GUAR_SD.pdf", cat:"guaranty", desc:"Guaranty Notice — South Dakota"},
+  {file:"GUAR_TN.pdf", cat:"guaranty", desc:"Guaranty Notice — Tennessee"},
+  {file:"GUAR_TX.pdf", cat:"guaranty", desc:"Guaranty Notice — Texas"},
+  {file:"GUAR_UT.pdf", cat:"guaranty", desc:"Guaranty Notice — Utah"},
+  {file:"GUAR_VA.pdf", cat:"guaranty", desc:"Guaranty Notice — Virginia"},
+  {file:"GUAR_WA.pdf", cat:"guaranty", desc:"Guaranty Notice — Washington"},
+  {file:"GUAR_WV.pdf", cat:"guaranty", desc:"Guaranty Notice — West Virginia"},
+  {file:"GUAR_WY.pdf", cat:"guaranty", desc:"Guaranty Notice — Wyoming"},
+  // Operational
+  {file:"OPS_PPM_RECEIPT.docx", cat:"operational", desc:"PPM Receipt"},
+  {file:"OPS_W9.pdf", cat:"operational", desc:"W-9"},
+  {file:"OPS_ACKNOWLEDGMENT.docx", cat:"operational", desc:"Acknowledgment Form"},
+  {file:"OPS_DOC_DELIVERY.docx", cat:"operational", desc:"Document Delivery Instructions"},
+  {file:"OPS_INTERESTED_PARTY.docx", cat:"operational", desc:"Interested Party Request"},
+  {file:"OPS_NOTICE_INSURANCE.pdf", cat:"operational", desc:"Notice of Insurance Info Practices"},
+  {file:"OPS_PRIVACY_POLICY.pdf", cat:"operational", desc:"Privacy Policy"},
+  {file:"OPS_PRIVACY_POLICY_CA.pdf", cat:"operational", desc:"Privacy Policy — CA Residents"},
+  {file:"OPS_WIRE_INSTRUCTIONS.pdf", cat:"operational", desc:"Wire Instructions"},
+  {file:"OPS_COMPENSATION_ACK.docx", cat:"operational", desc:"Compensation Acknowledgement Form"},
+  // Conditional
+  {file:"COND_1035_EXCHANGE.docx", cat:"conditional", desc:"1035 Absolute Exchange Form"},
+  {file:"COND_1035_LOST_POLICY.docx", cat:"conditional", desc:"1035 Lost Policy Letter"},
+  {file:"COND_CA_FREE_LOOK.pdf", cat:"conditional", desc:"CA Senior Policy Free Look"},
+  {file:"COND_TAX_CERT_EXCHANGE.pdf", cat:"conditional", desc:"Tax Certification Policy Exchange"},
+  // Attachments
+  {file:"ATT_LIST_OF_BENEFICIARIES.pdf", cat:"attachment", desc:"List of Beneficiaries"},
+  {file:"ATT_ALLOCATION_FORM.pdf", cat:"attachment", desc:"Allocation Form"},
+  {file:"ATT_REPLACEMENT.pdf", cat:"attachment", desc:"Replacement Attachment"},
+];
+
+// Missing forms the bundler references but no file exists
+const MISSING_FILES = [
+  {formId:"PARepl-0111", cat:"replacement", desc:"Replacement — Pennsylvania (PA)"},
+  {formId:"WYRepl-0313", cat:"replacement", desc:"Replacement — Wyoming (WY)"},
+];
+
+// ════════════════════════════════════════
+// BUNDLING ENGINE
 // ════════════════════════════════════════
 
 function generateBundle(p) {
@@ -567,97 +832,119 @@ function generateBundle(p) {
   let seq = 0;
   const add = (tag, name, formId, cat, condition) => {
     seq++;
-    forms.push({seq, tag, name, formId: formId || "—", category: cat, condition});
+    const file = resolveFile(tag, formId);
+    forms.push({seq, tag, name, formId: formId || "—", category: cat, condition, file});
   };
 
-  // ── Investor Questionnaires ──
+  // ── STEP 1: Investor Questionnaires ──
   if (p.ownerType === "individual") {
     if (p.ppmType === "3c7") {
-      add("IND_AIQP","Axcelus AI-QP Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(7) — Accredited Investor + Qualified Purchaser, Individual Owner");
+      add("IND_AIQP","AI-QP Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(7), Individual");
     } else {
-      add("IND_AI","Axcelus AI Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(1) — Accredited Investor Only, Individual Owner");
+      add("IND_AI","AI Questionnaire — Individual Policy Owner","—","investor","PPM 3(c)(1), Individual");
     }
-    add("IND_RP","Axcelus Restricted Person Questionnaire — Individual Policy Owner","—","investor","All Individuals");
-    add("IND_5131","Axcelus Rule 5131 Questionnaire — Individual Policy Owner","—","investor","All Individuals");
+    add("IND_RP","Restricted Person Questionnaire — Individual Policy Owner","—","investor","All Individuals");
+    add("IND_5131","Rule 5131 Questionnaire — Individual Policy Owner","—","investor","All Individuals");
   } else if (p.ownerType === "entity") {
     if (p.ppmType === "3c7") {
-      add("ENT_AIQP","Axcelus AI-QP Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(7) — Accredited Investor + Qualified Purchaser, Entity Owner");
+      add("ENT_AIQP","AI-QP Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(7), Entity");
     } else {
-      add("ENT_AI","Axcelus AI Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(1) — Accredited Investor Only, Entity Owner");
+      add("ENT_AI","AI Questionnaire — Entity Policy Owner","—","investor","PPM 3(c)(1), Entity");
     }
-    add("ENT_RP","Axcelus Restricted Person Questionnaire — Entity Policy Owner","—","investor","All Entities");
-    add("ENT_5131","Axcelus Rule 5131 Questionnaire — Entity Policy Owner","—","investor","All Entities");
+    add("ENT_RP","Restricted Person Questionnaire — Entity Policy Owner","—","investor","All Entities");
+    add("ENT_5131","Rule 5131 Questionnaire — Entity Policy Owner","—","investor","All Entities");
 
     if (p.supportingEntityCount > 0) {
       for (let i = 1; i <= p.supportingEntityCount; i++) {
-        const label = p.supportingEntityCount > 1 ? " #" + i : "";
+        const lbl = p.supportingEntityCount > 1 ? " #" + i : "";
         if (p.ppmType === "3c7") {
-          add("SUP_ENT_AIQP" + (i > 1 ? "_" + i : ""),"Axcelus AI-QP Supporting Questionnaire (Entity)" + label,"—","investor","Supporting Entity" + label + ", PPM 3(c)(7) — Accredited Investor + Qualified Purchaser");
+          add("SUP_ENT_AIQP" + (i > 1 ? "_" + i : ""),"AI-QP Supporting Questionnaire (Entity)" + lbl,"—","investor","Supporting Entity" + lbl + ", PPM 3(c)(7)");
         } else {
-          add("SUP_ENT_AI" + (i > 1 ? "_" + i : ""),"Axcelus AI Supporting Questionnaire (Entity)" + label,"—","investor","Supporting Entity" + label + ", PPM 3(c)(1) — Accredited Investor Only");
+          add("SUP_ENT_AI" + (i > 1 ? "_" + i : ""),"AI Supporting Questionnaire (Entity)" + lbl,"—","investor","Supporting Entity" + lbl + ", PPM 3(c)(1)");
         }
-        add("SUP_ENT_RP" + (i > 1 ? "_" + i : ""),"Axcelus Restricted Person Supporting Questionnaire (Entity)" + label,"—","investor","Supporting Entity" + label);
-        add("SUP_ENT_5131" + (i > 1 ? "_" + i : ""),"Axcelus Rule 5131 Supporting Questionnaire (Entity)" + label,"—","investor","Supporting Entity" + label);
+        add("SUP_ENT_RP" + (i > 1 ? "_" + i : ""),"Restricted Person Supporting Questionnaire (Entity)" + lbl,"—","investor","Supporting Entity" + lbl);
+        add("SUP_ENT_5131" + (i > 1 ? "_" + i : ""),"Rule 5131 Supporting Questionnaire (Entity)" + lbl,"—","investor","Supporting Entity" + lbl);
       }
     }
-
     if (p.supportingIndividualCount > 0) {
       for (let i = 1; i <= p.supportingIndividualCount; i++) {
-        const label = p.supportingIndividualCount > 1 ? " #" + i : "";
+        const lbl = p.supportingIndividualCount > 1 ? " #" + i : "";
         if (p.ppmType === "3c7") {
-          add("SUP_IND_AIQP" + (i > 1 ? "_" + i : ""),"Axcelus AI-QP Supporting Questionnaire (Individual)" + label,"—","investor","Supporting Individual" + label + ", PPM 3(c)(7) — Accredited Investor + Qualified Purchaser");
+          add("SUP_IND_AIQP" + (i > 1 ? "_" + i : ""),"AI-QP Supporting Questionnaire (Individual)" + lbl,"—","investor","Supporting Individual" + lbl + ", PPM 3(c)(7)");
         } else {
-          add("SUP_IND_AI" + (i > 1 ? "_" + i : ""),"Axcelus AI Supporting Questionnaire (Individual)" + label,"—","investor","Supporting Individual" + label + ", PPM 3(c)(1) — Accredited Investor Only");
+          add("SUP_IND_AI" + (i > 1 ? "_" + i : ""),"AI Supporting Questionnaire (Individual)" + lbl,"—","investor","Supporting Individual" + lbl + ", PPM 3(c)(1)");
         }
-        add("SUP_IND_RP" + (i > 1 ? "_" + i : ""),"Axcelus Restricted Person Supporting Questionnaire (Individual)" + label,"—","investor","Supporting Individual" + label);
-        add("SUP_IND_5131" + (i > 1 ? "_" + i : ""),"Axcelus Rule 5131 Supporting Questionnaire (Individual)" + label,"—","investor","Supporting Individual" + label);
+        add("SUP_IND_RP" + (i > 1 ? "_" + i : ""),"Restricted Person Supporting Questionnaire (Individual)" + lbl,"—","investor","Supporting Individual" + lbl);
+        add("SUP_IND_5131" + (i > 1 ? "_" + i : ""),"Rule 5131 Supporting Questionnaire (Individual)" + lbl,"—","investor","Supporting Individual" + lbl);
       }
     }
   }
 
-  // ── Operational Forms ──
+  // ── STEP 2: Operational Forms (always) ──
+  const appFormId = APP_FORMS[p.state] || "APVA-197";
   add("PPM_RECEIPT","Private Placement Memorandum Receipt","PPM Receipt","universal","Always");
-  add("APPLICATION","Application for Variable Annuity Contract",APP_FORMS[p.state] || "—","state","State: " + p.state);
+  add("APPLICATION","Application for Variable Annuity Contract",appFormId,"state","State: " + p.state);
   add("W9","W-9","W-9","universal","Always");
   add("ACK","Acknowledgement Form","Acknowledgement Form","universal","Always");
+  add("COMPENSATION_ACK","Compensation Acknowledgement Form","Compensation Ack","universal","Always");
   add("DOC_DELIVERY","Document Delivery Instructions","Electronic Delivery Instructions","universal","Always");
   add("INTERESTED_PARTY","Interested Party Request","Interested Party Request","universal","Always");
   add("NOTICE_INS","Notice of Insurance Information Practices","Notice of Insurance Info","universal","Always");
 
-  // CA Free Look
+  // ── STEP 3: FL-specific extra forms ──
+  if (p.state === "FL") {
+    add("FL_DFS_H1_1980","FL Disclosure Form DFS-H1-1980","DFS-H1-1980","state","FL only");
+    add("FL_DI4_1180","FL Form DI4-1180-0111","DI4-1180-0111","state","FL only");
+  }
+
+  // ── STEP 4: CA Free Look ──
   if (p.state === "CA" && p.isApplicant60Plus) {
     add("CA_FREE_LOOK","CA Senior Policy Free Look","CA Free Look Invest Auth","conditional","CA + Applicant 60+");
   }
 
-  // Replacement forms
+  // ── STEP 5: Replacement forms ──
   if (p.transactionType === "replacement") {
     add("1035_EXCHANGE","1035 Absolute Exchange Form","1035 Absolute Exchange Form","conditional","Replacement");
     add("1035_LOST","1035 Lost Policy Letter","1035 Lost Policy Letter","conditional","Replacement");
+    add("TAX_CERT_EXCHANGE","Tax Certification Policy Exchange","Tax Cert Policy Exchange","conditional","Replacement / 1035 Exchange");
 
     const replForms = REPL_FORMS[p.state];
     if (p.state === "KS") {
       const ksForm = p.ksInsurerType === "same" ? "KSReplSame-0111" : "KSReplDiff-0111";
-      add("REPLACEMENT","Replacement Form",ksForm,"state","KS Replacement (" + p.ksInsurerType + " insurer)");
+      add("REPLACEMENT",  "Replacement Form", ksForm, "state", "KS (" + p.ksInsurerType + " insurer)");
     } else if (replForms) {
       replForms.forEach((f, i) => {
-        add("REPLACEMENT" + (i > 0 ? "_" + (i+1) : ""),"Replacement Form",f,"state","Replacement — " + p.state);
+        add("REPLACEMENT" + (i > 0 ? "_" + (i+1) : ""), "Replacement Form", f, "state", "Replacement — " + p.state);
       });
     }
-    // NV/ND: no replacement form — we just don't add one
     if ((p.state === "NV" || p.state === "ND") && !replForms) {
-      add("REPLACEMENT_NOTE","⚠ No replacement form available for " + p.state,"—","conditional","State has no replacement form");
+      add("REPLACEMENT_NOTE","⚠ No replacement form for " + p.state,"—","conditional","No state replacement form");
     }
+
+    // Replacement attachment
+    add("ATT_REPLACEMENT","Replacement Attachment","Attachment 3","attachment","Replacement");
   }
 
+  // ── STEP 6: Always-included attachments ──
+  add("ATT_BENEFICIARIES","List of Beneficiaries","Attachment 1","attachment","Always");
+  add("ATT_ALLOCATION","Allocation Form","Attachment 2","attachment","Always");
+
+  // ── STEP 7: Guaranty Notice ──
+  const guarFile = GUARANTY_MAP[p.state] || "GUAR_DEFAULT.pdf";
+  const guarLabel = GUARANTY_MAP[p.state] ? p.state : "Default";
+  seq++;
+  forms.push({seq, tag:"GUARANTY", name:"Guaranty Association Notice — " + guarLabel, formId:guarLabel, category:"guaranty", condition:"Always (state-specific)", file: guarFile});
+
+  // ── STEP 8: Closing forms ──
   add("PRIVACY","Privacy Policy","Axcelus Privacy Policy","universal","Always");
-  add("PRIVACY_CA","Privacy Policy — CA Residents","Axcelus Privacy Policy CA Residents","universal","Always (all states)");
+  add("PRIVACY_CA","Privacy Policy — CA Residents","Axcelus Privacy Policy CA","universal","Always (all states)");
   add("WIRE","Wire Instructions","Wire Instructions","universal","Always");
 
   return forms;
 }
 
 // ════════════════════════════════════════
-//  COMPONENTS
+// COMPONENTS
 // ════════════════════════════════════════
 
 function Toggle({on, onChange, label}) {
@@ -683,25 +970,45 @@ function Counter({value, onChange, label}) {
 }
 
 function CategoryBadge({cat}) {
-  const cls = {investor:"cat-investor",universal:"cat-universal",state:"cat-state",conditional:"cat-conditional"};
-  const labels = {investor:"Investor Qual",universal:"Universal",state:"State-Specific",conditional:"Conditional"};
+  const cls = {investor:"cat-investor",universal:"cat-universal",state:"cat-state",conditional:"cat-conditional",guaranty:"cat-guaranty",attachment:"cat-attachment"};
+  const labels = {investor:"Investor Qual",universal:"Universal",state:"State-Specific",conditional:"Conditional",guaranty:"Guaranty",attachment:"Attachment"};
   return <span className={`cat-badge ${cls[cat]||''}`}>{labels[cat]||cat}</span>;
 }
 
+function FormName({name, file}) {
+  const url = getFileUrl(file);
+  if (file && url) {
+    return (
+      <div className="form-name-cell">
+        <span className="present-dot"></span>
+        <a className="form-link" href={url} target="_blank" rel="noopener noreferrer">{name}</a>
+      </div>
+    );
+  }
+  if (file === null) {
+    return (
+      <div className="form-name-cell">
+        <span className="missing-dot" title="File missing"></span>
+        <span>{name}</span>
+      </div>
+    );
+  }
+  // file === undefined means no mapping (e.g. note rows)
+  return <span>{name}</span>;
+}
+
 // ════════════════════════════════════════
-//  LOGIN PAGE
+// LOGIN PAGE
 // ════════════════════════════════════════
 
 function LoginPage({onLogin}) {
   const [pw, setPw] = useState("");
   const [err, setErr] = useState(false);
-
   const submit = (e) => {
     e.preventDefault();
     if (pw === PASSWORD) { onLogin(); }
     else { setErr(true); setPw(""); }
   };
-
   return (
     <div className="login-page">
       <div className="login-card">
@@ -721,7 +1028,7 @@ function LoginPage({onLogin}) {
 }
 
 // ════════════════════════════════════════
-//  BUNDLER PAGE
+// BUNDLER PAGE
 // ════════════════════════════════════════
 
 function BundlerPage() {
@@ -735,14 +1042,19 @@ function BundlerPage() {
   const [ksInsurerType, setKsInsurerType] = useState("different");
 
   const isBlocked = BLOCKED.includes(state);
-
   const forms = useMemo(() => {
     if (!state || isBlocked) return [];
-    return generateBundle({
-      state, ppmType, ownerType, supportingEntityCount, supportingIndividualCount,
-      transactionType, isApplicant60Plus, ksInsurerType
-    });
+    return generateBundle({state, ppmType, ownerType, supportingEntityCount, supportingIndividualCount, transactionType, isApplicant60Plus, ksInsurerType});
   }, [state, ppmType, ownerType, supportingEntityCount, supportingIndividualCount, transactionType, isApplicant60Plus, ksInsurerType, isBlocked]);
+
+  const catLabels = {
+    investor:"Investor Qualification Questionnaires",
+    universal:"Operational Forms — Universal",
+    state:"Operational Forms — State-Specific",
+    conditional:"Operational Forms — Conditional",
+    guaranty:"Guaranty Association Notice",
+    attachment:"Attachments"
+  };
 
   return (
     <div className="bundler-page">
@@ -767,11 +1079,11 @@ function BundlerPage() {
           <div className="radio-group">
             <div className="radio-option">
               <input type="radio" name="ppm" id="ppm7" value="3c7" checked={ppmType==="3c7"} onChange={e=>setPpmType(e.target.value)} />
-              <label htmlFor="ppm7">3(c)(7) — Accredited Investor + Qualified Purchaser</label>
+              <label htmlFor="ppm7">3(c)(7) — AI + QP</label>
             </div>
             <div className="radio-option">
               <input type="radio" name="ppm" id="ppm1" value="3c1" checked={ppmType==="3c1"} onChange={e=>setPpmType(e.target.value)} />
-              <label htmlFor="ppm1">3(c)(1) — Accredited Investor Only</label>
+              <label htmlFor="ppm1">3(c)(1) — AI Only</label>
             </div>
           </div>
         </div>
@@ -815,7 +1127,7 @@ function BundlerPage() {
         <div className={`cond-field ${state==="CA" ? "visible" : "hidden"}`}>
           <div className="field" style={{background:'var(--ice)',padding:'0.75rem',borderRadius:'var(--radius)'}}>
             <Toggle on={isApplicant60Plus} onChange={setIsApplicant60Plus} label="Applicant Age 60+?" />
-            <div className="field-hint">California requires Senior Policy Free Look for applicants 60+.</div>
+            <div className="field-hint">CA requires Senior Policy Free Look for applicants 60+.</div>
           </div>
         </div>
 
@@ -853,35 +1165,31 @@ function BundlerPage() {
               <div className="results-title">Form Bundle — {STATES.find(s=>s.code===state)?.name || state}</div>
               <div style={{display:'flex',gap:'0.5rem',alignItems:'center'}}>
                 <span className="results-count">{forms.length} forms</span>
-                <button className="btn btn-outline" style={{fontSize:'0.8rem',padding:'0.3rem 0.7rem'}} onClick={()=>window.print()}>
-                  Print
-                </button>
+                <button className="btn btn-outline" style={{fontSize:'0.8rem',padding:'0.3rem 0.7rem'}} onClick={()=>window.print()}>Print</button>
               </div>
             </div>
             <table className="form-table">
               <thead>
                 <tr>
                   <th style={{width:36}}>#</th>
-                  <th style={{width:130}}>Tag</th>
+                  <th style={{width:140}}>Tag</th>
                   <th>Form Name</th>
-                  <th style={{width:180}}>Form ID</th>
-                  <th style={{width:110}}>Category</th>
-                  <th style={{width:180}}>Condition</th>
+                  <th style={{width:170}}>Form ID</th>
+                  <th style={{width:100}}>Category</th>
+                  <th style={{width:170}}>Condition</th>
                 </tr>
               </thead>
               <tbody>
                 {forms.map((f, i) => {
-                  // Insert category dividers
                   const prevCat = i > 0 ? forms[i-1].category : null;
                   const divider = f.category !== prevCat;
-                  const catLabels = {investor:"Investor Qualification Questionnaires",universal:"Operational Forms — Universal",state:"Operational Forms — State-Specific",conditional:"Operational Forms — Conditional"};
                   return (
                     <React.Fragment key={i}>
                       {divider && <tr className="cat-divider"><td colSpan={6}>{catLabels[f.category] || f.category}</td></tr>}
                       <tr>
                         <td style={{color:'var(--slate)',fontSize:'0.78rem'}}>{f.seq}</td>
                         <td><code className="mono">{f.tag}</code></td>
-                        <td>{f.name}</td>
+                        <td><FormName name={f.name} file={f.file} /></td>
                         <td><code className="mono" style={{color:'var(--navy)'}}>{f.formId}</code></td>
                         <td><CategoryBadge cat={f.category} /></td>
                         <td style={{color:'var(--slate)',fontSize:'0.82rem'}}>{f.condition}</td>
@@ -899,14 +1207,97 @@ function BundlerPage() {
 }
 
 // ════════════════════════════════════════
-//  LOGIC PAGE
+// FORMS PAGE (new)
+// ════════════════════════════════════════
+
+function FormsPage() {
+  const catOrder = ["investor","application","replacement","guaranty","operational","conditional","attachment"];
+  const catNames = {
+    investor:"Investor Questionnaires",
+    application:"Application Forms",
+    replacement:"Replacement Forms",
+    guaranty:"Guaranty Notices",
+    operational:"Operational Forms",
+    conditional:"Conditional Forms",
+    attachment:"Attachments"
+  };
+
+  const grouped = {};
+  catOrder.forEach(c => grouped[c] = []);
+  ALL_FILES.forEach(f => {
+    if (grouped[f.cat]) grouped[f.cat].push(f);
+  });
+
+  return (
+    <div className="forms-page">
+      <h1>Form Files Inventory</h1>
+      <p style={{color:'var(--slate)',marginBottom:'1rem'}}>Complete list of all form files. Click any file to open it.</p>
+
+      <div className="forms-summary">
+        <div className="forms-summary-card" style={{background:'var(--green-light)',color:'var(--green)'}}>
+          <span className="num">{ALL_FILES.length}</span> present files
+        </div>
+        <div className="forms-summary-card" style={{background:'var(--red-light)',color:'var(--red)'}}>
+          <span className="num">{MISSING_FILES.length}</span> missing files
+        </div>
+      </div>
+
+      {MISSING_FILES.length > 0 && (
+        <>
+          <h2 style={{color:'var(--red)'}}>⚠ Missing Files</h2>
+          <table className="form-table" style={{marginBottom:'2rem'}}>
+            <thead><tr><th>Form ID</th><th>Description</th><th>Category</th></tr></thead>
+            <tbody>
+              {MISSING_FILES.map((f,i) => (
+                <tr key={i}>
+                  <td><code className="mono" style={{color:'var(--red)'}}>{f.formId}</code></td>
+                  <td><span className="missing-dot"></span>{f.desc}</td>
+                  <td><CategoryBadge cat={f.cat === "replacement" ? "state" : f.cat} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      <h2>All Present Files</h2>
+      {catOrder.map(cat => {
+        const files = grouped[cat];
+        if (!files || files.length === 0) return null;
+        return (
+          <div key={cat} style={{marginBottom:'1.5rem'}}>
+            <h3 style={{fontSize:'0.9rem',fontWeight:700,marginBottom:'0.5rem',color:'var(--navy)'}}>{catNames[cat]} ({files.length})</h3>
+            <table className="form-table">
+              <thead><tr><th style={{width:300}}>Filename</th><th>Description</th></tr></thead>
+              <tbody>
+                {files.map((f,i) => (
+                  <tr key={i}>
+                    <td>
+                      <a className="form-link mono" href={getFileUrl(f.file)} target="_blank" rel="noopener noreferrer" style={{fontSize:'0.8rem'}}>
+                        {f.file}
+                      </a>
+                    </td>
+                    <td style={{fontSize:'0.85rem'}}>{f.desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+// LOGIC PAGE
 // ════════════════════════════════════════
 
 function LogicPage() {
   return (
     <div className="logic-page">
       <h1>Bundling Logic Reference</h1>
-      <p style={{color:'var(--slate)',marginBottom:'1.5rem'}}>Complete rule set for the Axcelus PPVA/PPVL Forms Bundler. For developers.</p>
+      <p style={{color:'var(--slate)',marginBottom:'1.5rem'}}>Complete rule set for the Axcelus PPVA/PPVL Forms Bundler.</p>
 
       <h2>1. Input Parameters</h2>
       <table className="logic-table">
@@ -915,58 +1306,53 @@ function LogicPage() {
           <tr><td><code>state</code></td><td>Select</td><td>50 states + DC</td><td>Always</td></tr>
           <tr><td><code>ppm_type</code></td><td>Radio</td><td><code>3c7</code> | <code>3c1</code></td><td>Always</td></tr>
           <tr><td><code>owner_type</code></td><td>Radio</td><td><code>individual</code> | <code>entity</code></td><td>Always</td></tr>
-          <tr><td><code>has_supporting_entity</code></td><td>Boolean</td><td>true | false</td><td><code>owner_type = entity</code></td></tr>
-          <tr><td><code>has_supporting_individual</code></td><td>Boolean</td><td>true | false</td><td><code>owner_type = entity</code></td></tr>
+          <tr><td><code>supporting_entity_count</code></td><td>Counter</td><td>0+</td><td><code>owner_type = entity</code></td></tr>
+          <tr><td><code>supporting_individual_count</code></td><td>Counter</td><td>0+</td><td><code>owner_type = entity</code></td></tr>
           <tr><td><code>transaction_type</code></td><td>Radio</td><td><code>new_business</code> | <code>replacement</code></td><td>Always</td></tr>
           <tr><td><code>is_applicant_60_plus</code></td><td>Boolean</td><td>true | false</td><td><code>state = CA</code></td></tr>
-          <tr><td><code>ks_insurer_type</code></td><td>Radio</td><td><code>same</code> | <code>different</code></td><td><code>state = KS</code> AND <code>transaction_type = replacement</code></td></tr>
+          <tr><td><code>ks_insurer_type</code></td><td>Radio</td><td><code>same</code> | <code>different</code></td><td><code>state = KS</code> AND <code>replacement</code></td></tr>
         </tbody>
       </table>
 
       <h2>2. Decision Tree — Investor Questionnaires</h2>
-      <p>The PPM type determines which investor status questionnaire to use. The owner type and entity structure determine how many sets of questionnaires are needed.</p>
       <pre>{`IF owner_type = "individual":
-  IF ppm_type = "3c7" → IND_AIQP    (Accredited Investor + Qualified Purchaser questionnaire)
-  IF ppm_type = "3c1" → IND_AI      (Accredited Investor only questionnaire)
-  ALWAYS              → IND_RP      (Restricted Person)
-  ALWAYS              → IND_5131    (Rule 5131)
+  IF ppm_type = "3c7" → IND_AIQP
+  IF ppm_type = "3c1" → IND_AI
+  ALWAYS → IND_RP, IND_5131
 
 IF owner_type = "entity":
   IF ppm_type = "3c7" → ENT_AIQP
   IF ppm_type = "3c1" → ENT_AI
-  ALWAYS              → ENT_RP
-  ALWAYS              → ENT_5131
+  ALWAYS → ENT_RP, ENT_5131
 
-  IF has_supporting_entity:
+  FOR EACH supporting_entity (1..N):
     IF ppm_type = "3c7" → SUP_ENT_AIQP
     IF ppm_type = "3c1" → SUP_ENT_AI
-    ALWAYS              → SUP_ENT_RP
-    ALWAYS              → SUP_ENT_5131
+    ALWAYS → SUP_ENT_RP, SUP_ENT_5131
 
-  IF has_supporting_individual:
+  FOR EACH supporting_individual (1..N):
     IF ppm_type = "3c7" → SUP_IND_AIQP
     IF ppm_type = "3c1" → SUP_IND_AI
-    ALWAYS              → SUP_IND_RP
-    ALWAYS              → SUP_IND_5131`}</pre>
-
-      <h3>Key Insight</h3>
-      <p>Each "level" (owner, supporting entity, supporting individual) always has exactly 3 forms: one PPM-type-dependent + Restricted Person + Rule 5131. The PPM type only toggles which of the first form to use (AI-QP vs AI-only).</p>
+    ALWAYS → SUP_IND_RP, SUP_IND_5131`}</pre>
 
       <h2>3. Operational Forms — Always Included</h2>
-      <p>These 10 forms are included for every valid order (new business). They do NOT vary by PPM type or owner type.</p>
       <table className="logic-table">
-        <thead><tr><th>Seq</th><th>Tag</th><th>Form</th><th>State Varies?</th></tr></thead>
+        <thead><tr><th>Tag</th><th>Form</th><th>State Varies?</th></tr></thead>
         <tbody>
-          <tr><td>1</td><td><code>PPM_RECEIPT</code></td><td>Private Placement Memorandum Receipt</td><td>No</td></tr>
-          <tr><td>2</td><td><code>APPLICATION</code></td><td>Application for Variable Annuity Contract</td><td><strong>Yes</strong> — see §5</td></tr>
-          <tr><td>3</td><td><code>W9</code></td><td>W-9</td><td>No</td></tr>
-          <tr><td>4</td><td><code>ACK</code></td><td>Acknowledgement Form</td><td>No</td></tr>
-          <tr><td>5</td><td><code>DOC_DELIVERY</code></td><td>Document Delivery Instructions</td><td>No</td></tr>
-          <tr><td>6</td><td><code>INTERESTED_PARTY</code></td><td>Interested Party Request</td><td>No</td></tr>
-          <tr><td>7</td><td><code>NOTICE_INS</code></td><td>Notice of Insurance Information Practices</td><td>No</td></tr>
-          <tr><td>8</td><td><code>PRIVACY</code></td><td>Privacy Policy</td><td>No</td></tr>
-          <tr><td>9</td><td><code>PRIVACY_CA</code></td><td>Privacy Policy — CA Residents</td><td>No (all states)</td></tr>
-          <tr><td>10</td><td><code>WIRE</code></td><td>Wire Instructions</td><td>No</td></tr>
+          <tr><td><code>PPM_RECEIPT</code></td><td>PPM Receipt</td><td>No</td></tr>
+          <tr><td><code>APPLICATION</code></td><td>Application for Variable Annuity</td><td><strong>Yes</strong></td></tr>
+          <tr><td><code>W9</code></td><td>W-9</td><td>No</td></tr>
+          <tr><td><code>ACK</code></td><td>Acknowledgement Form</td><td>No</td></tr>
+          <tr><td><code>COMPENSATION_ACK</code></td><td>Compensation Acknowledgement Form</td><td>No</td></tr>
+          <tr><td><code>DOC_DELIVERY</code></td><td>Document Delivery Instructions</td><td>No</td></tr>
+          <tr><td><code>INTERESTED_PARTY</code></td><td>Interested Party Request</td><td>No</td></tr>
+          <tr><td><code>NOTICE_INS</code></td><td>Notice of Insurance Info Practices</td><td>No</td></tr>
+          <tr><td><code>PRIVACY</code></td><td>Privacy Policy</td><td>No</td></tr>
+          <tr><td><code>PRIVACY_CA</code></td><td>Privacy Policy — CA Residents</td><td>No (all states)</td></tr>
+          <tr><td><code>WIRE</code></td><td>Wire Instructions</td><td>No</td></tr>
+          <tr><td><code>GUARANTY</code></td><td>Guaranty Association Notice</td><td><strong>Yes</strong> (state-specific)</td></tr>
+          <tr><td><code>ATT_BENEFICIARIES</code></td><td>List of Beneficiaries</td><td>No</td></tr>
+          <tr><td><code>ATT_ALLOCATION</code></td><td>Allocation Form</td><td>No</td></tr>
         </tbody>
       </table>
 
@@ -974,72 +1360,36 @@ IF owner_type = "entity":
       <table className="logic-table">
         <thead><tr><th>Tag</th><th>Form</th><th>Condition</th></tr></thead>
         <tbody>
-          <tr><td><code>CA_FREE_LOOK</code></td><td>CA Senior Policy Free Look</td><td><code>state = CA AND is_applicant_60_plus = true</code></td></tr>
-          <tr><td><code>1035_EXCHANGE</code></td><td>1035 Absolute Exchange Form</td><td><code>transaction_type = replacement</code></td></tr>
-          <tr><td><code>1035_LOST</code></td><td>1035 Lost Policy Letter</td><td><code>transaction_type = replacement</code></td></tr>
-          <tr><td><code>REPLACEMENT</code></td><td>Replacement Form</td><td><code>transaction_type = replacement</code> (state-specific ID)</td></tr>
+          <tr><td><code>CA_FREE_LOOK</code></td><td>CA Senior Policy Free Look</td><td><code>state=CA AND age 60+</code></td></tr>
+          <tr><td><code>FL_DFS_H1_1980</code></td><td>FL Disclosure DFS-H1-1980</td><td><code>state=FL</code></td></tr>
+          <tr><td><code>FL_DI4_1180</code></td><td>FL Form DI4-1180-0111</td><td><code>state=FL</code></td></tr>
+          <tr><td><code>1035_EXCHANGE</code></td><td>1035 Absolute Exchange Form</td><td><code>replacement</code></td></tr>
+          <tr><td><code>1035_LOST</code></td><td>1035 Lost Policy Letter</td><td><code>replacement</code></td></tr>
+          <tr><td><code>TAX_CERT_EXCHANGE</code></td><td>Tax Certification Policy Exchange</td><td><code>replacement</code></td></tr>
+          <tr><td><code>REPLACEMENT</code></td><td>Replacement Form</td><td><code>replacement</code> (state-specific)</td></tr>
+          <tr><td><code>ATT_REPLACEMENT</code></td><td>Replacement Attachment</td><td><code>replacement</code></td></tr>
         </tbody>
       </table>
 
-      <h2>5. State-Specific Application Forms</h2>
-      <p>Most states use <code>APVA-197</code>. Exceptions:</p>
-      <table className="logic-table">
-        <thead><tr><th>State(s)</th><th>Form ID</th></tr></thead>
-        <tbody>
-          <tr><td>AZ</td><td><code>APVA-197AZ</code></td></tr>
-          <tr><td>AR, ME, OH</td><td><code>APVA-197F</code></td></tr>
-          <tr><td>CA</td><td><code>APVA-197CA</code></td></tr>
-          <tr><td>DC</td><td><code>APVA-197DC</code></td></tr>
-          <tr><td>FL</td><td><code>APVA-197FL</code></td></tr>
-          <tr><td>HI</td><td><code>APVA-2012</code> (different form entirely)</td></tr>
-          <tr><td>MA</td><td><code>APVA-197MA</code></td></tr>
-          <tr><td>MD</td><td><code>APVA-197MD</code></td></tr>
-          <tr><td>NC</td><td><code>APVA-197NC</code></td></tr>
-          <tr><td>NJ</td><td><code>APVA-197NJ</code></td></tr>
-          <tr><td>OK</td><td><code>APVA-197OK</code></td></tr>
-          <tr><td>TX</td><td><code>APVA-197TX</code></td></tr>
-        </tbody>
-      </table>
-
-      <h2>6. State-Specific Replacement Forms</h2>
-      <p>Most states use <code>GNLRepl-0111</code>. Key exceptions:</p>
-      <table className="logic-table">
-        <thead><tr><th>State</th><th>Form ID(s)</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td>FL</td><td><code>FLReplA-0111</code> + <code>FLDFS-H1-1981</code></td><td>TWO forms required</td></tr>
-          <tr><td>IL</td><td><code>ILReplA-1112</code> + <code>ILReplB-1112</code></td><td>TWO forms required</td></tr>
-          <tr><td>KS</td><td><code>KSReplDiff-0111</code> or <code>KSReplSame-0111</code></td><td>Depends on same/different insurer</td></tr>
-          <tr><td>NV, ND</td><td>None</td><td>No replacement form exists</td></tr>
-          {[["AR","ArkCompForm-0111"],["CA","CARepl-0111"],["DE","DERepl-0111"],["GA","GARepl-1116"],
-            ["ID","IDRepl-0111"],["IN","INRepl-0111"],["MA","MARepl-0111"],["MI","MIRepl-0111"],
-            ["MN","MNRepl-0111"],["MO","MORepl-0111"],["OK","OKRepl-0111"],["PA","PARepl-0111"],
-            ["SD","SDRepl1035Ex-1116"],["TN","TNRepl-1116"],["WA","WARepl-1116"],["WY","WYRepl-0313"]
-          ].map(([st,form]) => <tr key={st}><td>{st}</td><td><code>{form}</code></td><td>State-specific</td></tr>)}
-        </tbody>
-      </table>
-
-      <h2>7. Edge Cases & Warnings</h2>
-      <ol>
-        <li><strong>NH, NY, PR</strong> — Not approved for business. No forms can be generated.</li>
-        <li><strong>FL & IL replacements</strong> — Each requires TWO separate replacement forms (not one).</li>
-        <li><strong>KS replacements</strong> — Different form depending on whether the replacing insurer is the same company or a different one.</li>
-        <li><strong>NV & ND</strong> — No replacement form exists; replacement transactions may not be supported in these states.</li>
-        <li><strong>CA Free Look</strong> — Only for California AND only when applicant is 60+ years old.</li>
-        <li><strong>Privacy Policy — CA Residents</strong> — Included for ALL states, not just California.</li>
-        <li><strong>Hawaii</strong> — Uses a completely different application form number (<code>APVA-2012</code>).</li>
-        <li><strong>Investor questionnaires</strong> — No state variation at all; purely driven by PPM type + owner type + entity structure.</li>
-      </ol>
-
-      <h2>8. Blocked States</h2>
-      <pre>{`const BLOCKED_STATES = ["NH", "NY", "PR"];
-// These states have NO forms at all in the matrix.
-// If selected, show error and return empty bundle.`}</pre>
+      <h2>5. Edge Cases</h2>
+      <ul>
+        <li><strong>NH, NY, PR</strong> — not approved, blocked entirely</li>
+        <li><strong>FL &amp; IL</strong> — replacement requires TWO forms each</li>
+        <li><strong>FL</strong> — has 2 additional state-specific forms (DFS-H1-1980, DI4-1180)</li>
+        <li><strong>KS</strong> — replacement depends on same/different insurer</li>
+        <li><strong>NV &amp; ND</strong> — no replacement form exists</li>
+        <li><strong>CA</strong> — Senior Free Look only if applicant 60+</li>
+        <li><strong>HI</strong> — uses completely different application form (APVA-2012)</li>
+        <li><strong>Privacy Policy CA</strong> — included for ALL states</li>
+        <li><strong>Guaranty Notice</strong> — state-specific where available, falls back to default</li>
+        <li><strong>Missing files</strong>: PARepl-0111 (PA) and WYRepl-0313 (WY) not yet provided</li>
+      </ul>
     </div>
   );
 }
 
 // ════════════════════════════════════════
-//  APP SHELL
+// APP
 // ════════════════════════════════════════
 
 function App() {
@@ -1055,21 +1405,24 @@ function App() {
     <>
       <nav className="nav">
         <div className="nav-brand">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           Axcelus Forms Bundler
         </div>
         <div className="nav-links">
           <button className={`nav-link ${page==="bundler"?"active":""}`} onClick={()=>setPage("bundler")}>Bundler</button>
-          <button className={`nav-link ${page==="logic"?"active":""}`} onClick={()=>setPage("logic")}>Logic Reference</button>
+          <button className={`nav-link ${page==="forms"?"active":""}`} onClick={()=>setPage("forms")}>Forms</button>
+          <button className={`nav-link ${page==="logic"?"active":""}`} onClick={()=>setPage("logic")}>Logic</button>
         </div>
         <button className="nav-logout" onClick={logout}>Sign Out</button>
       </nav>
-      {page === "bundler" ? <BundlerPage /> : <LogicPage />}
+      {page === "bundler" && <BundlerPage />}
+      {page === "forms" && <FormsPage />}
+      {page === "logic" && <LogicPage />}
     </>
   );
 }
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
 </script>
 </body>
 </html>
