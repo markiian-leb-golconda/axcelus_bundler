@@ -638,11 +638,11 @@ const FILE_MAP = {
   "MNRepl-0111":        "REPL_MN_MNRepl-0111.pdf",
   "MORepl-0111":        "REPL_MO_MORepl-0111.pdf",
   "OKRepl-0111":        "REPL_OK_OKRepl-0111.pdf",
-  "PARepl-0111":        null, // MISSING FILE
+  "PARepl-0111":        "REPL_PA_PARepl-0111.doc",
   "SDRepl1035Ex-1116":  "REPL_SD_SDRepl1035Ex-1116.pdf",
   "TNRepl-1116":        "REPL_TN_TNRepl-1116.pdf",
   "WARepl-1116":        "REPL_WA_WARepl-1116.pdf",
-  "WYRepl-0313":        null, // MISSING FILE
+  "WYRepl-0313":        "REPL_WY_WYRepl-0313.doc",
 
   // ── Operational forms (by tag) ──
   "PPM_RECEIPT":        "OPS_PPM_RECEIPT.docx",
@@ -674,9 +674,12 @@ const FILE_MAP = {
 
 // Resolve file for a form entry: check tag first, then formId
 function resolveFile(tag, formId) {
-  // Strip numbered suffixes for supporting entity/individual duplicates
+  // Try exact tag match first
+  if (FILE_MAP[tag] !== undefined) return FILE_MAP[tag];
+  // Strip numbered suffixes for supporting entity/individual duplicates (e.g. SUP_ENT_AIQP_2 → SUP_ENT_AIQP)
   const baseTag = tag.replace(/_\d+$/, "");
-  if (FILE_MAP[baseTag] !== undefined) return FILE_MAP[baseTag];
+  if (baseTag !== tag && FILE_MAP[baseTag] !== undefined) return FILE_MAP[baseTag];
+  // Try formId
   if (formId && FILE_MAP[formId] !== undefined) return FILE_MAP[formId];
   return undefined; // truly unknown
 }
@@ -757,6 +760,8 @@ const ALL_FILES = [
   {file:"REPL_TN_TNRepl-1116.pdf", cat:"replacement", desc:"Replacement — Tennessee"},
   {file:"REPL_WA_WARepl-1116.pdf", cat:"replacement", desc:"Replacement — Washington"},
   {file:"REPL_WA_WARepl-1116_legacy.doc", cat:"replacement", desc:"Replacement — Washington (legacy .doc)"},
+  {file:"REPL_PA_PARepl-0111.doc", cat:"replacement", desc:"Replacement — Pennsylvania"},
+  {file:"REPL_WY_WYRepl-0313.doc", cat:"replacement", desc:"Replacement — Wyoming"},
   // Guaranty notices
   {file:"GUAR_DEFAULT.pdf", cat:"guaranty", desc:"Guaranty Notice — Default"},
   {file:"GUAR_AK.pdf", cat:"guaranty", desc:"Guaranty Notice — Alaska"},
@@ -817,10 +822,7 @@ const ALL_FILES = [
 ];
 
 // Missing forms the bundler references but no file exists
-const MISSING_FILES = [
-  {formId:"PARepl-0111", cat:"replacement", desc:"Replacement — Pennsylvania (PA)"},
-  {formId:"WYRepl-0313", cat:"replacement", desc:"Replacement — Wyoming (WY)"},
-];
+const MISSING_FILES = [];
 
 // ════════════════════════════════════════
 // BUNDLING ENGINE
@@ -937,7 +939,7 @@ function generateBundle(p) {
 
   // ── STEP 8: Closing forms ──
   add("PRIVACY","Privacy Policy","Axcelus Privacy Policy","universal","Always");
-  add("PRIVACY_CA","Privacy Policy — CA Residents","Axcelus Privacy Policy CA","universal","Always (all states)");
+  add("PRIVACY_CA","Privacy Policy — CA Residents","Axcelus Privacy Policy CA","universal","Always (CCPA — required for all states)");
   add("WIRE","Wire Instructions","Wire Instructions","universal","Always");
 
   return forms;
@@ -1382,7 +1384,6 @@ IF owner_type = "entity":
         <li><strong>HI</strong> — uses completely different application form (APVA-2012)</li>
         <li><strong>Privacy Policy CA</strong> — included for ALL states</li>
         <li><strong>Guaranty Notice</strong> — state-specific where available, falls back to default</li>
-        <li><strong>Missing files</strong>: PARepl-0111 (PA) and WYRepl-0313 (WY) not yet provided</li>
       </ul>
     </div>
   );
